@@ -37,4 +37,4 @@ vignettes/*.pdf
 .swp
 
 # The gifs generated in animation might be too big
-#.gif
+.gif
