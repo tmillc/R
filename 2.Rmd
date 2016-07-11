@@ -1,17 +1,43 @@
 ---
-title: "Hmm"
-author: "c"
-date: "7/10/2016"
+title: "Page 2"
 output:
   html_document:
-  number_sections: yes
-  toc: yes
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
 
-Here's a plot. [Back](index.html) to the front page.
+This is the top of the page!
 
-  ```{r, echo=FALSE}
-library(lattice) 
-library(datasets)
-xyplot(Ozone ~ Wind | as.factor(Month), data = airquality, layout = c(5,1))
+# Summaries {.tabset .tabset-fade .tabset-pills}
+
+Here are some summaries of R things
+
+Let's
+
+make
+
+some
+
+space
+
+## IO 
+
+Take a look at this:
+```{r}
+x <- rnorm(100); y <- x + rnorm(100)
 ```
+
+We can see that fgklj sjklkjf llkjf! 
+
+More space
+
+## Plotting
+
+Base, Lattice, ggplot
+
+```{r, echo=FALSE}
+plot(1:3)
+```
+
+# Coursera Stuff
