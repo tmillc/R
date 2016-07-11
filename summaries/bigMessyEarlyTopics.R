@@ -1,48 +1,3 @@
-# week1, distilled into things that even remotely surprised me
-as.numeric(1+1i)  # drops imaginary part
-as.numeric(c("a", "b", "c"))  # can't coerce char -> num, so char -> NA
-file.info()  # returns a data frame, so ie file.info("file")$size
-unlink()  # deletes files and dirs
-
-# http://stackoverflow.com/questions/18475202/paste-collapse-in-r
-#   for 'sep' and 'collapse' in paste()
-
-# filesystem independent path reference, nest dirs by recursive = TRUE
-file.path("folder1", "folder2")
-dir.create(file.path("testdir2", "tesdtdir3"), recursive = TRUE)
-unlink("testdir2", recursive = TRUE)
-
-seq(along.with = 1:5) == seq_along(1:5)
-seq(as.Date("2000/1/1"), by = "month", length.out=12) # can seq Dates
-seq(4,11, length=20) # can specify length of seq
-
-rep(c(1,2), times = 10) # 1 2 1 2 ...
-rep(c(1,2), each = 10) # 111..222...
-
-# Make missing data, or generally a mix of data
-y <- rnorm(1000); z <- rep(NA,1000)
-messy_data <- sample(c(y,z), 100)
-my_na <- is.na(messy_data) # finds where they are
-
-# Use jitter to make a noisy sinewave
-x <- seq(-6, 6, by=0.2)
-plot(x, jitter(sin(x), factor = 1, amount = 0.2))
-
-# matrices are vectors with a dimension attribute
-v1 <- 1:6; dim(v1) <- c(2,3); class(v1)
-
-x <- data.frame(id = 1:4, truth = c(T,T,F,T))
-# can turn to a matrix, coercing values to all be the same type
-data.matrix(x)
-
-my_matrix <- matrix(1:20, 4,5)
-patients <- c("Sean", "Bill", "Claude", "Kelly")
-cbind(patients, my_matrix)       # coerces everything to char
-data.frame(patients, my_matrix)  # patients is char, matrix is matrix
-
-as.logical(-2:2)    # everything non-zero is True, T T F T T
-as.numeric(TRUE)    # returns 1
-15:11 # can sequence backwards
 
 # Factors are ordered or unordered. Yes, no, maybe is unordered but
 # child, parent, grandparent would probably be ordered.
@@ -1426,3 +1381,47 @@ boxplot(formula = mpg ~ cyl, data = mtcars)
 
 # histograms are nice for single variables
 hist(mtcars$mpg)
+
+
+########################### FUNCTIONS
+# Functions are "first class objects" in R
+# they can be passed as arguments to other functions for instance
+# they can be nested, so you can define a function inside another function
+# The return value of a function is the last expression in the function body to be evaluated
+
+formals(rnorm)   # formals() returns a list of formal arguments for a function
+# returns $n, $mean, and $sd
+
+mydata <- rnorm(100)
+sd(mydata)      # mydata is passed as the first argument, the rest are default
+sd(x = mydata)  # equiv
+sd(x = mydata, na.rm = FALSE)
+sd(na.rm = FALSE, x = mydata) # fine, but not recommended to change around order
+sd(na.rm = FALSE, mydata)     # since mydata is unnamed, it will be assigned to the first expected argument, x
+
+# When an argument is matched by name, it is "taken out" of the list, and
+# following arguments will be matched in order
+
+# functions in R are lazily evaluated
+# Here, c has a default value, but b doesn't, but b isn't used so we don't really care
+f1 <- function(a, b, c = TRUE) {
+  a^2
+}
+
+f2 <- function(a,b) {
+  print(a)
+  print(b)
+}
+# Calling f(45) will print 45, THEN error, because 45 will match for a, and b will be unmatched when it is called
+
+# "..." argument indicates a variable number of arguments that are usually passed on to other functions
+# Consider extending the plot function:
+myplot <- function(x, y, type="l", ... ) {
+  plot(x, y, type = type, ... )
+}
+
+# paste() doesn't know how many objects it will be pasting, so ... is the first argument
+args(paste)
+# function (..., sep = " ", collapse = NULL)
+
+# NOTE! Arguments that appear after the ... must be explicitly named (and cannot be partially matched)
