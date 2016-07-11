@@ -1,0 +1,131 @@
+
+matrices   matrix(nrow = m, ncol = n), has attribute $dim which is a vector [ r c ]
+  When specifying the elems of a mat via ie 1:k, it will fill col1 then col2, etc
+  "dim(someVector) <- c(2,3)" will change that vector into a 2x3 matrix
+  "cbind(v1, v2)" will make a vector where v1 is col1, v2 is col2
+  "rbind(v1, v2)" will make a vector where v1 is row1, v2 is row2
+
+factors
+  a factor is like a bunch of labels. "Yes", "No", "Maybe" for instance. In that case those three
+  would be the Levels. The actual factor would be something like yes yes yes no maybe no no yes maybe.
+
+quick and dirty histogram: table()
+
+unclass()
+
+missing values
+  A NaN is a type of NA
+
+data frames
+  Kind of like spreadsheets. "data.frame(id = 1:4, truth = c(T,T,F,T))" would give a 2 col dataframe
+
+names
+dimnames() - for matrices or array. Let A be a 2x3, then:
+dimnames(A) <- list(c("row1", "row2"), c("col1", "col2", "col3"))
+
+   READING
+read.table()
+read.csv()  - identical to read.table except assumed to be comma separated
+read.csv()
+readLines()  - reads lines of a text file
+source()  - reads in R code, inverse of dump
+dget()    - reading R objects that have been "de-parsed", inverse of dput
+load()    - loads a workspace
+unserialize() - loads single R objects in binary form
+
+  WRITING
+write.table()
+writeLines()
+dump()  - inverse of source
+dput    - inverse of dget
+save    - inverse of load
+serialize  - inverse of unserialize
+
+read.table arguments:
+  file, name of file, path, connection
+  header, whether or not we have a title row
+  sep, how cols are separated
+  colClasses, character vector indicating class of each col
+  nrows, number rows in dataset
+  comment.char, character string indicating a comment
+  skip, number of lines to skip from beginning
+  stringsAsFactors, should strings be parsed as factors?
+
+For small/moderate datasets, can use read.table() without specifying arguments
+  automatically: skip lines beginning with #, figure out rows, type of vars
+    Explicitly say arguments for efficiency
+
+Make a rough calculation of memory required to hold dataset. If dataset > RAM, probably stop.
+set comment.char = "" if no comment lines
+setting colClasses can speed up a LOT
+
+Quick and dirty way to assign colClasses:
+initial <- read.table("dataset.txt", nrows = 100)  # Just look at the first 100 to set classes
+classes <- sapply(initial, class)
+tabAll <- read.table("dataset.txt", colClasses = classes)
+
+Setting nrows won't speed up R but helps with memory usage. Mild overestimate is okay. Using 'wc' can tell the # of lines.
+
+   Estimate Memory Needed
+1.5 million rows, 120 cols, all numeric. 1.5mil * 120 * 8 (8 bytes per numeric)
+~1.34 Gb. Rule of thumb: Need about twice that to load it into R, with overhead.
+
+dumping and dputing preserve metadata contrasting outputing to table/csv
+  edit-able, so in case of corruption, can be opened and examined
+  also good for version control
+  is a textual format rather than a binary
+  not space efficient though
+
+dput - single object
+dump - multiple objects: dump(c("obj1", "obj2"), file = "data.R")
+retrieve dumps with source
+
+file, bzfile, gzfile - opens a connection to a file
+url - opens a connection to a website
+
+con <- file("data.txt", "r")  # opening for reading
+data <- read.csv(con)
+close(con)
+
+That's equivalent to data <- read.csv("data.txt")
+Can use a file connection to read parts of a file
+
+con <- gzfile("test.gz")
+x <- readLines(con, 10)    # x[1] is the first line of test.gz, x[10] is the tenth
+
+   Subsetting
+[], [[]], $
+Single bracket returns object of same class, and can be used to retrieve multiple objects
+Double is used to extract elems from a list or data frame. Can only get one, and may not be the same type.
+$ extracts by name from a list or data frame. Similar to double bracket.
+
+x <- c(1,4,3,5,5,6)
+x > 2   # F T T T T
+u <- x > 2   # Now u is a logical index
+x[u]         # gives back the elems that correspond with T in our logical index
+x[2:5]   # 4 3 5 5
+u <- c(T,F,T,F)  # Not the same size as x, but
+x[u]             # gives 1 3 5, so it's assuming the extra is false
+
+x <- list(firstName = 1:4, secondName = 0.7, thirdName = "hi")
+x[1]     # Returns a list with 1:4
+# $firstName
+# 1 2 3 4
+
+x[[1]]   # Returns 1:4
+# 1 2 3 4
+
+x$secondName       # returns 0.7
+x[["secondName"]]  # returns 0.7
+x["secondName"]    # returns a list with 0.7 in it
+
+For extracting multiple elements of a list, must use the single bracket subsetter. Because you want a list back, because the elems might not be the same kind.
+
+So we pass as an index, a vector:
+x[c(1,3)]
+x[c("firstName", "thirdName")]
+
+The nice thing about the double brackets is it can parse in if the name is the result of a computation
+name <- "secondName"
+x[[name]]   # gives 0.7
+x$name      # NULL
