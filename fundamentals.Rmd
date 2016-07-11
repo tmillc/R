@@ -3,8 +3,111 @@ title: "Fundamentals"
 output:
   html_document:
     toc: true
-    toc_depth: 3
-    toc_float: true
+    toc_depth: 4
+    toc_float:
+      collapsed: false
     theme: yeti
     css: style.css
 ---
+
+### Data Types
+
+NA vals, logical vectors, factors
+
+#### Factors
+
+A factor is like a bunch of labels. “Yes”, “No”, “Maybe” for instance. In that case those three would be the Levels. The actual factor would be something like yes yes yes no maybe no no yes maybe. Factors are ordered or unordered. Yes, no, maybe is unordered but child, parent, grandparent would probably be ordered.
+
+Here "a" is our baseline, the levels are lexicographic. 
+```{r}
+fac <- factor(c("a", "a", "c", "a", "c", "m", levels=c("m", "a","c"))); print(fac)
+```
+
+```{r}
+fac <- relevel(fac, ref="m"); print(fac)
+unclass(fac)
+```
+
+Behind the scenes, as seen above with unclass()
+
+#### NA
+
+A NaN is a type of NA.
+```{r}
+is.na(NaN)
+Inf + Inf
+Inf - Inf
+Inf * Inf
+Inf / Inf
+0+0
+0-0
+0*0
+0/0
+Inf * 0
+Inf + 0
+Inf - 0
+Inf / 0
+0 / Inf
+```
+
+#### Matrix
+
+Matrices are vectors with a dimension attribute
+```{r}
+v1 <- 1:6
+dim(v1) <- c(2,3)
+class(v1)
+```
+
+Giving dimension names to a matrix
+```{r}
+A <- matrix(nrow = 3, ncol = 2)
+dimnames(A) <- list(c("row1", "row2", "row3"), c("col1", "col2"))
+A
+```
+
+cbind and rbind
+```{r}
+rbind(1:3, 6:8)
+cbind(1:3, 6:8)
+```
+
+### Coercion
+
+Coerce to matrix, note the T's and F's
+```{r}
+x <- data.frame(id = 1:4, truth = c(T,T,F,T))
+data.matrix(x)
+```
+
+```{r}
+my_matrix <- matrix(1:20, 4,5)
+patients <- c("Sean", "Bill", "Claude", "Kelly")
+cbind(patients, my_matrix)       # coerces everything to char
+data.frame(patients, my_matrix)  # patients is char, matrix is matrix
+```
+
+```{r}
+as.logical(-2:2)
+as.numeric(TRUE)
+as.numeric(c("a","b","c"))  # no way to coerce char -> num
+```
+
+### IO, files
+
+dir.create, file.info, file.rename, ls, dir, unlink, 
+
+Filesystem independent path reference, nest dirs by recursive = TRUE
+```{r}
+file.path("folder1", "folder2")
+dir.create(file.path("testdir2", "tesdtdir3"), recursive = TRUE)
+unlink("testdir2", recursive = TRUE)
+```
+
+### Functions
+
+args, dotdotdot example .R
+
+#### Scope 
+
+#### anonymous/closure/lambda 
