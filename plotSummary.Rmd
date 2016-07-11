@@ -36,7 +36,7 @@ The plotting system that ships with R
 
 ### Lattice {.tabset .tabset-fade .tabset-pills}
 
-code for Trellis graphics
+code for Trellis graphics. Takes options from base, see ?par and ?points.
 
 ```{r lat_loads}
 ```

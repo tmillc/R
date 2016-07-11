@@ -16,7 +16,7 @@ library(lattice)
 library(datasets)
 
 ## @knitr lat_xyplot
-xyplot(Ozone ~ Wind, data = airquality, pch = 12) # options from base, see ?par and ?points
+xyplot(Ozone ~ Wind, data = airquality, pch = 12)
 xyplot(Ozone ~ Wind | as.factor(Month), data = airquality, layout = c(5,1))
 
 ## @knitr lat_bw
