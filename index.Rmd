@@ -1,14 +1,26 @@
 ---
-title: "R Programming"
-output: 
-  html_document: 
-    number_sections: yes
-    toc: yes
+title: "R Language"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: yeti
+    css: style.css
 ---
 
 This is a github page for my repository of R code.
 
+### Notes
+
+My notes, as .R files, were getting very messy and it was hard to find anything I wanted to reference, so I am using Rmarkdown to make things more presentable.
+
 [Here](2.html) experiments, tests in gh-pages
 
-[Plotting](plotting.html) 
+[Basic](basic.html) features of the language, data types, etc.
 
+[Plotting](plotSummary.html) 
+
+### Projects
+
+TODO

@@ -1,0 +1,28 @@
+---
+title: "Plotting Summary"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: yeti
+    css: style.css
+---
+
+```{r echo=FALSE}
+knitr::read_chunk('plotSummary_chunks.R')
+```
+
+## Plotting Systems {.tabset .tabset-fade .tabset-pills}
+
+### Base
+```{r base1}
+```
+
+### Lattice
+```{r lat_xyplot}
+```
+
+### ggplot2
+```{r ggp_qplot}
+```
