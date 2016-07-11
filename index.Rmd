@@ -4,9 +4,7 @@ author: "c"
 date: "7/10/2016"
 output: 
   html_document: 
-    highlight: textmate
     number_sections: yes
-    theme: autumn
     toc: yes
 ---
 
@@ -37,3 +35,5 @@ plot(cars)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+[Here](2.html) is another page

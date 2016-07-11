@@ -1,0 +1,17 @@
+---
+title: "Hmm"
+author: "c"
+date: "7/10/2016"
+output:
+  html_document:
+  number_sections: yes
+  toc: yes
+---
+
+Here's a plot. [Back](index.html) to the front page.
+
+  ```{r, echo=FALSE}
+library(lattice) 
+library(datasets)
+xyplot(Ozone ~ Wind | as.factor(Month), data = airquality, layout = c(5,1))
+```
