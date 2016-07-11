@@ -3,8 +3,57 @@ title: "Data Shapes"
 output:
   html_document:
     toc: true
-    toc_depth: 3
-    toc_float: true
+    toc_depth: 4
+    toc_float: 
+      collapsed: false
     theme: yeti
     css: style.css
 ---
+
+### Generating Patterns
+
+#### Sample
+```{r}
+sample(c("yes","no","maybe"), replace = TRUE, 10, prob=c(0.8,0.1,0.1))
+```
+
+#### Sequence
+```{r}
+seq(along.with = 15:11) == seq_along(1:5) # 1 2 3 4 5
+seq(4,11, length=20) # can specify length of seq
+```
+
+We can also sequence along dates
+```{r}
+seq(as.Date("2000/1/1"), by = "month", length.out=12)
+```
+
+#### Replicate
+```{r}
+rep(c(1,2), times = 10) # 1 2 1 2 ...
+rep(c(1,2), each = 10) # 111..222...
+```
+
+### Generating Noise
+
+#### By sampling
+
+Sampling 100 elements randomly from a set containing 1000 rnorms and 1000 NAs.
+```{r}
+y <- rnorm(1000); z <- rep(NA,1000)
+messy_data <- sample(c(y,z), 100)
+my_na <- is.na(messy_data) # gives us a logical vector of where the NAs are
+```
+
+#### jitter()
+
+Using jitter to make a noisy sinewave
+```{r}
+x <- seq(-6, 6, by=0.2)
+plot(x, jitter(sin(x), factor = 1, amount = 0.2))
+```
+
+### Data Manipulation
+
+paste: sep, collapse see http://stackoverflow.com/questions/18475202/paste-collapse-in-r
+

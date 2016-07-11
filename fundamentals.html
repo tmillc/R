@@ -122,7 +122,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2,h3,h4",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -131,7 +131,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify
@@ -193,6 +193,13 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
 
 </style>
 
@@ -217,7 +224,132 @@ div.tocify {
 </div>
 
 
-
+<div id="data-types" class="section level3">
+<h3>Data Types</h3>
+<p>NA vals, logical vectors, factors</p>
+<div id="factors" class="section level4">
+<h4>Factors</h4>
+<p>A factor is like a bunch of labels. “Yes”, “No”, “Maybe” for instance. In that case those three would be the Levels. The actual factor would be something like yes yes yes no maybe no no yes maybe. Factors are ordered or unordered. Yes, no, maybe is unordered but child, parent, grandparent would probably be ordered.</p>
+<p>Here “a” is our baseline, the levels are lexicographic.</p>
+<pre class="r"><code>fac &lt;- factor(c(&quot;a&quot;, &quot;a&quot;, &quot;c&quot;, &quot;a&quot;, &quot;c&quot;, &quot;m&quot;, levels=c(&quot;m&quot;, &quot;a&quot;,&quot;c&quot;))); print(fac)</code></pre>
+<pre><code>##                                                 levels1 levels2 levels3 
+##       a       a       c       a       c       m       m       a       c 
+## Levels: a c m</code></pre>
+<pre class="r"><code>relevel(fac, ref=&quot;m&quot;)</code></pre>
+<pre><code>##                                                 levels1 levels2 levels3 
+##       a       a       c       a       c       m       m       a       c 
+## Levels: m a c</code></pre>
+</div>
+<div id="na" class="section level4">
+<h4>NA</h4>
+<p>A NaN is a type of NA.</p>
+<pre class="r"><code>is.na(NaN)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>Inf + Inf</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>Inf - Inf</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre class="r"><code>Inf * Inf</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>Inf / Inf</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre class="r"><code>0+0</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>0-0</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>0*0</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>0/0</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre class="r"><code>Inf * 0</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre class="r"><code>Inf + 0</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>Inf - 0</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>Inf / 0</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>0 / Inf</code></pre>
+<pre><code>## [1] 0</code></pre>
+</div>
+<div id="matrix" class="section level4">
+<h4>Matrix</h4>
+<p>Matrices are vectors with a dimension attribute</p>
+<pre class="r"><code>v1 &lt;- 1:6
+dim(v1) &lt;- c(2,3)
+class(v1)</code></pre>
+<pre><code>## [1] &quot;matrix&quot;</code></pre>
+<p>Giving dimension names to a matrix</p>
+<pre class="r"><code>A &lt;- matrix(nrow = 3, ncol = 2)
+dimnames(A) &lt;- list(c(&quot;row1&quot;, &quot;row2&quot;, &quot;row3&quot;), c(&quot;col1&quot;, &quot;col2&quot;))
+A</code></pre>
+<pre><code>##      col1 col2
+## row1   NA   NA
+## row2   NA   NA
+## row3   NA   NA</code></pre>
+<p>cbind and rbind</p>
+<pre class="r"><code>rbind(1:3, 6:8)</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    6    7    8</code></pre>
+<pre class="r"><code>cbind(1:3, 6:8)</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    6
+## [2,]    2    7
+## [3,]    3    8</code></pre>
+</div>
+</div>
+<div id="coercion" class="section level3">
+<h3>Coercion</h3>
+<p>Coerce to matrix, note the T’s and F’s</p>
+<pre class="r"><code>x &lt;- data.frame(id = 1:4, truth = c(T,T,F,T))
+data.matrix(x)</code></pre>
+<pre><code>##      id truth
+## [1,]  1     1
+## [2,]  2     1
+## [3,]  3     0
+## [4,]  4     1</code></pre>
+<pre class="r"><code>my_matrix &lt;- matrix(1:20, 4,5)
+patients &lt;- c(&quot;Sean&quot;, &quot;Bill&quot;, &quot;Claude&quot;, &quot;Kelly&quot;)
+cbind(patients, my_matrix)       # coerces everything to char</code></pre>
+<pre><code>##      patients                       
+## [1,] &quot;Sean&quot;   &quot;1&quot; &quot;5&quot; &quot;9&quot;  &quot;13&quot; &quot;17&quot;
+## [2,] &quot;Bill&quot;   &quot;2&quot; &quot;6&quot; &quot;10&quot; &quot;14&quot; &quot;18&quot;
+## [3,] &quot;Claude&quot; &quot;3&quot; &quot;7&quot; &quot;11&quot; &quot;15&quot; &quot;19&quot;
+## [4,] &quot;Kelly&quot;  &quot;4&quot; &quot;8&quot; &quot;12&quot; &quot;16&quot; &quot;20&quot;</code></pre>
+<pre class="r"><code>data.frame(patients, my_matrix)  # patients is char, matrix is matrix</code></pre>
+<pre><code>##   patients X1 X2 X3 X4 X5
+## 1     Sean  1  5  9 13 17
+## 2     Bill  2  6 10 14 18
+## 3   Claude  3  7 11 15 19
+## 4    Kelly  4  8 12 16 20</code></pre>
+<pre class="r"><code>as.logical(-2:2)</code></pre>
+<pre><code>## [1]  TRUE  TRUE FALSE  TRUE  TRUE</code></pre>
+<pre class="r"><code>as.numeric(TRUE)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>as.numeric(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;))  # no way to coerce char -&gt; num</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre><code>## [1] NA NA NA</code></pre>
+</div>
+<div id="io-files" class="section level3">
+<h3>IO, files</h3>
+<p>dir.create, file.info, file.rename, ls, dir, unlink,</p>
+<p>Filesystem independent path reference, nest dirs by recursive = TRUE</p>
+<pre class="r"><code>file.path(&quot;folder1&quot;, &quot;folder2&quot;)</code></pre>
+<pre><code>## [1] &quot;folder1/folder2&quot;</code></pre>
+<pre class="r"><code>dir.create(file.path(&quot;testdir2&quot;, &quot;tesdtdir3&quot;), recursive = TRUE)
+unlink(&quot;testdir2&quot;, recursive = TRUE)</code></pre>
+</div>
+<div id="functions" class="section level3">
+<h3>Functions</h3>
+<p>args, dotdotdot example .R</p>
+<div id="scope" class="section level4">
+<h4>Scope</h4>
+</div>
+<div id="anonymousclosurelambda" class="section level4">
+<h4>anonymous/closure/lambda</h4>
+</div>
+</div>
 
 
 
