@@ -15,14 +15,57 @@ knitr::read_chunk('plotSummary_chunks.R')
 
 ## Plotting Systems {.tabset .tabset-fade .tabset-pills}
 
-### Base
-```{r base1}
+### Base {.tabset .tabset-fade .tabset-pills}
+
+The plotting system that ships with R
+
+```{r base_loads}
 ```
 
-### Lattice
+#### plot()
+```{r base_plot}
+```
+
+#### hist()
+```{r base_hist}
+```
+
+#### boxplot()
+```{r base_box}
+```
+
+### Lattice {.tabset .tabset-fade .tabset-pills}
+
+code for Trellis graphics
+
+```{r lat_loads}
+```
+
+#### xyplot()
 ```{r lat_xyplot}
 ```
 
-### ggplot2
+#### bwplot()
+```{r lat_bw}
+```
+
+### ggplot2 {.tabset .tabset-fade .tabset-pills}
+
+Based on the Grammar of Graphics
+
+```{r ggp_loads}
+```
+
+#### qplot()
+
+qplot() is a wrapper for ...
+
 ```{r ggp_qplot}
+```
+
+#### geom_point()
+
+Adding point geometry
+
+```{r ggp_geom_point}
 ```
