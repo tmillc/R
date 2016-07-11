@@ -66,10 +66,25 @@ dimnames(A) <- list(c("row1", "row2", "row3"), c("col1", "col2"))
 A
 ```
 
+Generating dimension names for a matrix based on a prefix
+```{r}
+rnames <- rownames(A, do.NULL=FALSE, prefix="eqn")
+cnames <- colnames(A, do.NULL=FALSE, prefix="var")
+dimnames(A) <- list(rnames, cnames); print(A)
+```
+
 cbind and rbind
 ```{r}
 rbind(1:3, 6:8)
 cbind(1:3, 6:8)
+```
+
+#### Data Frames
+
+DFs are to matrices what lists are to vectors. Columns must be a single class. Tidy data says to have each row a single observation.
+
+```{r}
+data.frame(id = 1:4, truth = c(T,T,F,T))
 ```
 
 ### Coercion
