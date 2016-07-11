@@ -1,3 +1,5 @@
+# Note: this was found online, saved for study, use, and adaptation
+
 perlin_noise <- function(
   n = 5,   m = 7,    # Size of the grid for the vector field
   N = 100, M = 100   # Dimension of the image

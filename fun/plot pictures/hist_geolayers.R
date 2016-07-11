@@ -1,3 +1,5 @@
+# An attempt to create an image of geologic layers
+
 library(ggplot2)
 l1 <- rnorm(100, mean = 100, sd = 10)
 l2 <- rnorm(100, mean = 200, sd = 80)
