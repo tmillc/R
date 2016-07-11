@@ -1,0 +1,154 @@
+---
+title: "Plots"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    css: style.css
+---
+
+(Area above the first section)
+
+# Base {.tabset .tabset-fade .tabset-pills}
+
+## About
+
+The base plotting system in R
+
+### plot()
+
+yep
+
+yep
+
+yep
+
+yep
+
+yep
+
+yep
+
+yep
+
+yep
+
+
+### hist()
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+Histogram
+
+## Examples
+
+```{r}
+plot(rnorm(10), rnorm(10))
+```
+
+Other examples
+
+Other examples
+
+Other examples
+
+Other examples
+
+Other examples
+
+Other examples
+
+Other examples
+
+Other examples
+
+
+# Lattice {.tabset .tabset-fade .tabset-pills}
+
+LATTICE
+
+LATTICE
+
+LATTICE
+
+LATTICE
+
+LATTICE
+
+LATTICE
+
+
+## About
+
+...
+
+
+...
+
+...
+
+...
+
+...
+
+...
+
+## Examples
+
+...
+
+...
+
+...
+
+...
+
+...
+
+...
+
+# ggplot2 {.tabset .tabset-fade .tabset-pills}
+
+## About
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+Based on Grammar of Graphics etc
+
+## Examples
+
+```{r}
+library(ggplot2)
+g <- ggplot(mpg, aes(cyl, cty))
+summary(g) # tells our data, mapping and faceting
+print(g)   # nothing, haven't specified our geometry
+g + geom_point()  # comes with a default printing method
+p <- g + geom_point()  # and we can save it, too
+print(p + geom_smooth())  # adding a smoother, "loess" by default
+```
+
