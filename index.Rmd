@@ -15,11 +15,11 @@ This is a github page for my repository of R code.
 
 My notes, as .R files, were getting very messy and it was hard to find anything I wanted to reference, so I am using Rmarkdown to make things more presentable.
 
-[Here](2.html) experiments, tests in gh-pages
+* [Fundamentals](fundamentals.html) - basic features of the language, data types, etc.
+* [Plotting](plotSummary.html) - the plotting systems with examples
+* [Shapes](shapes.html) - Constructing data shapes, looking at data, cleaning data, dplyr, etc.
 
-[Basic](basic.html) features of the language, data types, etc.
-
-[Plotting](plotSummary.html) 
+[Experiments](2.html) and tests in gh-pages, rmd, knitr, css, etc
 
 ### Projects
 
