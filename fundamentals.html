@@ -363,6 +363,20 @@ cbind(patients, my_matrix)       # coerces everything to char</code></pre>
 <pre><code>## [1] &quot;folder1/folder2&quot;</code></pre>
 <pre class="r"><code>dir.create(file.path(&quot;testdir2&quot;, &quot;tesdtdir3&quot;), recursive = TRUE)
 unlink(&quot;testdir2&quot;, recursive = TRUE)</code></pre>
+<ul>
+<li><code>read.table</code> (inverse of write.table) and <code>read.csv</code> (identical to read.table, but assumes comma-sep and header=true): takes in tabular data and return a data frame</li>
+<li><code>readLines</code> (inverse of writeLines): reads lines of a text file in as a character vector</li>
+<li><code>dget</code> (inverse of dput): reads in de-parsed R objects</li>
+<li><code>source</code> (inverse of dump): reads in R source code</li>
+<li><code>load</code> (inverse of save): for workspaces</li>
+<li><code>unserialize</code> (inverse of serialize): for binary data</li>
+</ul>
+<p>Specify <code>read.table</code> arguments explicitly for speed. Not also <code>stringsAsFactors</code> - When it comes across a col that’s a character variable it’ll assume it to be a factor</p>
+<p>To load large datasets with <code>read.table</code>, make a rough calculation of memory required to hold dataset. If dataset &gt; RAM, probably stop. Set comment.char = “” if no comment lines. Setting colClasses can speed up a LOT.</p>
+<p>Quick and dirty way to assign colClasses: Look at the first 100 data to set classes, then set these explicitly on the entire dataset.</p>
+<pre class="r"><code>initial &lt;- read.table(&quot;dataset.txt&quot;, nrows = 100)
+classes &lt;- sapply(initial, class)
+tabAll &lt;- read.table(&quot;dataset.txt&quot;, colClasses = classes)</code></pre>
 </div>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
