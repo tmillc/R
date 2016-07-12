@@ -23,12 +23,15 @@ Here "a" is our baseline, the levels are lexicographic.
 fac <- factor(c("a", "a", "c", "a", "c", "m", levels=c("m", "a","c"))); print(fac)
 ```
 
+Reorder the factor levels:
 ```{r}
 fac <- relevel(fac, ref="m"); print(fac)
-unclass(fac)
 ```
 
-Behind the scenes, as seen above with unclass()
+Levels are numbers behind the scenes:
+```{r}
+unclass(fac)
+```
 
 #### NA
 
@@ -85,6 +88,128 @@ DFs are to matrices what lists are to vectors. Columns must be a single class. T
 
 ```{r}
 data.frame(id = 1:4, truth = c(T,T,F,T))
+```
+
+### Control Structures
+
+#### if/(else if)/(else)
+
+An `else if` or `else` statement is optional following `if` in R.
+```{r}
+if(3 > 2) {
+  y <- "yep"
+} else if (3 == 2) {
+  y <- "uh oh"
+} else {
+  y <- "uh oh"
+}
+print(y)
+```
+
+#### For
+
+The following examples are equivalent:
+```{r}
+x <- c("a", "b", "c", "d")
+
+for (i in 1:4) {
+  print(x[i])
+}
+
+for (i in seq_along(x)) {
+  print(x[i])
+}
+
+for (letter in x) {
+  print(letter)
+}
+
+for (i in seq_len(4)) { 
+  print(x[i])
+}
+
+for (i in 1:4) print(x[i])
+```
+
+Note the last example, `{}` are unnecessary for single statements.
+
+Traditional method of nesting `for` loops, however we often have the option of vectorizing such operations.
+```{r}
+x<-matrix(1:6, 2, 3)
+
+for (i in seq_len(nrow(x))) {
+  for (j in seq_len(ncol(x))) {
+    print(x[i,j])
+  }
+}
+```
+
+#### While
+```{r}
+count <- 0
+while(count<10) {
+  print(count)
+  count <- count + 1
+}
+```
+
+Here we decide the result of `if` by a simulated coin flip, constraining the simulation with a `while` loop.
+```{r}
+z<-5
+while(z>=3 && z<=10) {
+  print(z)
+  coin <- rbinom(1,1,0.5)
+
+  if(coin == 1) {    # random walk
+    z <- z+1
+  } else {
+    z <- z-1
+  }
+}
+```
+
+#### Break
+
+**Note from ?control**
+
+>it is a common mistake to forget to put `{...}` around your statements, e.g., after `if(...)` or `for(....)`. In particular, you should not have a newline between `}` and `else` to avoid a syntax error in entering an `if ... else` construct at the keyboard or via source. For that reason, one (somewhat extreme) attitude of defensive programming is to always use braces, e.g., for if clauses.
+
+#### Ifelse
+```{r}
+ifelse(3 > 2, yes = print("yes"), no = print("no"))
+ifelse(3 < 2, yes = print("yes"), no = print("no"))
+```
+
+#### Switch
+
+#### Repeat
+
+Warning: not guarenteed to halt, better to set hard limit on number of iterations, and report con-/di-vergence.
+```{r, eval=FALSE}
+x0 <- 1
+tol <- 1e-8
+
+repeat {
+  x1 <- computeSomeEstimate()
+
+  if (abs(x1-x0) < tol) {
+    break # we are within some tolerance, so break
+  } else {
+    x0 <- x1
+  }
+}
+```
+
+#### Assigning
+
+We can assign from control structures:
+```{r}
+y <- if(3 > 2) {
+  "yep"
+} else {
+  "uh oh"
+}
+print(y)
 ```
 
 ### Coercion
@@ -195,7 +320,58 @@ x <- readLines(con, 10)
 
 ### Functions
 
-args, dotdotdot example .R
+Functions are first-class in R: they can be passed, and defined in a scope. The return value is the last expression evaluated.
+
+```{r}
+formals(rnorm)
+```
+
+#### Argument order
+```{r, eval=FALSE}
+mydata <- rnorm(100)
+sd(mydata)      # mydata is passed as the first argument, the rest are default
+sd(x = mydata)  # equivalent to above
+sd(x = mydata, na.rm = FALSE)
+sd(na.rm = FALSE, x = mydata) # fine, but not recommended to change around order
+sd(na.rm = FALSE, mydata)     # since mydata is unnamed, it will be assigned to the first expected argument, x
+```
+
+When an argument is matched by name, it is "taken out" of the list, and following arguments will be matched in order.
+
+#### Lazy Evaluation
+
+Here, `c` has a default value, but `b` doesn't, but `b` isn't used so we don't really care.
+```{r}
+f1 <- function(a, b, c = TRUE) {
+  a^2
+}
+
+f2 <- function(a,b) {
+  print(a)
+  print(b)
+}
+```
+
+Calling `f2(45)` will print 45, THEN error, because 45 will match for `a`, and `b` will be unmatched when it is called.
+
+#### ...
+
+`...` argument indicates a variable number of arguments that are usually passed on to other functions.
+
+```{r}
+myplot <- function(x, y, type="l", ... ) { # extends plot()
+  plot(x, y, type = type, ... )
+}
+```
+
+`paste` doesn't know how many objects it will be pasting, so ... is the first argument
+```{r}
+args(paste)
+```
+
+**NOTE**: Arguments that appear after the ... must be explicitly named (and cannot be partially matched).
+
+dotdotdot example .R
 
 #### Vectorized Operations
 
@@ -239,3 +415,13 @@ Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surrou
 #### Scope 
 
 #### anonymous/closure/lambda 
+```{r}
+x <- list(a = matrix(1:4, 2,2), b= matrix(1:6, 3,2))
+lapply(x, function(y) y[,1])
+```
+
+```{r}
+f1 <- function(x) ifelse(x >= 0, sqrt(x), NA)
+f1(2)
+f1(-1)
+```
