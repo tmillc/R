@@ -19,8 +19,6 @@ My notes, as .R files, were getting very messy and it was hard to find anything 
 * [Plotting](plotSummary.html) - the plotting systems with examples
 * [Shapes](shapes.html) - Constructing data shapes, looking at data, cleaning data, dplyr, etc.
 
-[Experiments](2.html) and tests in gh-pages, rmd, knitr, css, etc
-
 ### Projects
 
 TODO
