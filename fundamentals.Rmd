@@ -12,7 +12,25 @@ output:
 
 ### Data Types
 
-NA vals, logical vectors, factors
+#### Numbers
+
+Numbers are real (double) by default, we can specify integer by suffixing it with `L`.
+```{r}
+typeof(2)
+typeof(2L)
+```
+
+#### Complex
+
+```{r}
+typeof(1+1i)  # often i might be used as a variable, so best to keep the coefficient
+```
+
+#### Vectors
+
+Numbers are actually vectors, of length 1, with class depending on their type. 
+
+logical vectors,
 
 #### Factors
 
@@ -199,6 +217,22 @@ repeat {
   }
 }
 ```
+
+#### Next
+
+Here we skip the first 20 iterations and `doSomething` on the last 80.
+```{r, eval=FALSE}
+for(i in 1:100) {
+  if(i <= 20) {
+    next 				
+  }
+  doSomething()
+}
+```
+
+#### Return
+
+
 
 #### Assigning
 
@@ -425,3 +459,5 @@ f1 <- function(x) ifelse(x >= 0, sqrt(x), NA)
 f1(2)
 f1(-1)
 ```
+
+>A closure has three components, its formals (its argument list), its body (expr in the ‘Usage’ section) and its environment which provides the enclosure of the evaluation frame when the closure is used.

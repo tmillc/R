@@ -226,7 +226,24 @@ div.tocify {
 
 <div id="data-types" class="section level3">
 <h3>Data Types</h3>
-<p>NA vals, logical vectors, factors</p>
+<div id="numbers" class="section level4">
+<h4>Numbers</h4>
+<p>Numbers are real (double) by default, we can specify integer by suffixing it with <code>L</code>.</p>
+<pre class="r"><code>typeof(2)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code>typeof(2L)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+</div>
+<div id="complex" class="section level4">
+<h4>Complex</h4>
+<pre class="r"><code>typeof(1+1i)  # often i might be used as a variable, so best to keep the coefficient</code></pre>
+<pre><code>## [1] &quot;complex&quot;</code></pre>
+</div>
+<div id="vectors" class="section level4">
+<h4>Vectors</h4>
+<p>Numbers are actually vectors, of length 1, with class depending on their type.</p>
+<p>logical vectors,</p>
+</div>
 <div id="factors" class="section level4">
 <h4>Factors</h4>
 <p>A factor is like a bunch of labels. “Yes”, “No”, “Maybe” for instance. In that case those three would be the Levels. The actual factor would be something like yes yes yes no maybe no no yes maybe. Factors are ordered or unordered. Yes, no, maybe is unordered but child, parent, grandparent would probably be ordered.</p>
@@ -423,26 +440,8 @@ while(z&gt;=3 &amp;&amp; z&lt;=10) {
   }
 }</code></pre>
 <pre><code>## [1] 5
-## [1] 6
-## [1] 5
 ## [1] 4
 ## [1] 5
-## [1] 6
-## [1] 5
-## [1] 6
-## [1] 7
-## [1] 8
-## [1] 9
-## [1] 10
-## [1] 9
-## [1] 8
-## [1] 7
-## [1] 6
-## [1] 7
-## [1] 8
-## [1] 7
-## [1] 6
-## [1] 7
 ## [1] 6
 ## [1] 7
 ## [1] 8
@@ -483,6 +482,19 @@ repeat {
     x0 &lt;- x1
   }
 }</code></pre>
+</div>
+<div id="next" class="section level4">
+<h4>Next</h4>
+<p>Here we skip the first 20 iterations and <code>doSomething</code> on the last 80.</p>
+<pre class="r"><code>for(i in 1:100) {
+  if(i &lt;= 20) {
+    next                
+  }
+  doSomething()
+}</code></pre>
+</div>
+<div id="return" class="section level4">
+<h4>Return</h4>
 </div>
 <div id="assigning" class="section level4">
 <h4>Assigning</h4>
@@ -696,6 +708,9 @@ f1(2)</code></pre>
 <pre><code>## [1] 1.414214</code></pre>
 <pre class="r"><code>f1(-1)</code></pre>
 <pre><code>## [1] NA</code></pre>
+<blockquote>
+<p>A closure has three components, its formals (its argument list), its body (expr in the ‘Usage’ section) and its environment which provides the enclosure of the evaluation frame when the closure is used.</p>
+</blockquote>
 </div>
 </div>
 
