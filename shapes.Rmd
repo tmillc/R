@@ -110,3 +110,53 @@ name <- "berries"
 x[[name]]
 x$name
 ```
+
+Subsetting a matrix
+```{r}
+x <- matrix(1:6, 2, 3); print(x)
+x[2,1]
+x[1, ]  # first row
+x[, 2]  # second column
+```
+
+`[]` usually returns an object as the same type, but `x[2,1]` returned a vector, not a matrix by default. This can be turned off by setting `drop = FALSE`.
+```{r}
+x[2, , drop = FALSE]
+```
+
+Partial Matching -- seems more problematic than useful
+```{r}
+x <- list(lamp = 1:3, lantern = 18:14)
+x$la
+x$lam
+x[["lam"]]
+x[["lam", exact = FALSE]]
+```
+
+Removing NAs by subsetting by a logical vector
+```{r}
+x <- c(1,2,NA,4,NA)
+bad <- is.na(x)
+x[!bad]
+```
+
+We can use complete.cases to return a logical vector that tells us which indices of the objects _all_ have no missing data
+```{r}
+y <- c(NA,2,3,4,NA)
+good <- complete.cases(x,y); print(good)
+x[good]
+y[good]
+```
+
+Using complete.cases on a data frame
+```{r}
+fac <- sample(LETTERS[1:3], 5, replace = TRUE)
+d <- data.frame(x = 1:5, y = 6:10, fac = fac)
+d[1,2] <- NA; d[2,3] <- NA
+good <- complete.cases(d)
+```
+
+`good` is a logical vector of the good rows, so we remove the bad ones:
+```{r}
+d[good, ]
+```

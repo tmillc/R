@@ -197,6 +197,40 @@ x <- readLines(con, 10)
 
 args, dotdotdot example .R
 
+#### Vectorized Operations
+
+Element-wise addition of vectors
+```{r}
+x <- 0:3; y <- 20:23
+print(x+y)
+```
+
+Element-wise comparison
+```{r}
+x == 2
+```
+
+When adding a scalar (in R, a vector of length 1) to a vector, R computes x+2 by first creating a vector of 2's the length of x.
+```{r}
+x+2
+```
+
+This is equivalent to `x + c(2,2,2,2)`.
+
+If R runs out of elements in a vector operation, it will “recycle” them, if the lengths are not multiples it will give a warning but return a truncated cycle.
+```{r}
+c(1,2,3,4) + c(0,10)
+c(1,2,3,4) + c(0,1,2) 
+```
+
+Vectorized operations on matrices
+```{r}
+x <- matrix(1:4, 2,2); y <- matrix(rep(10,4), 2,2)
+x / y  # element-wise division
+x * y  # element-wise multiplication
+x %*% y  # True matrix multiplication
+```
+
 Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surround it in backticks.
 
 ```{r}
