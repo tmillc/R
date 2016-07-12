@@ -1,6 +1,5 @@
 quick and dirty histogram: table()
 
-
 # Dates are represented by the Date class
 # Dates stored internally as days since 1/1/1970
 # Times are represented by the POSIXct or the POSIXlt class
