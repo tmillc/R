@@ -57,3 +57,42 @@ plot(x, jitter(sin(x), factor = 1, amount = 0.2))
 
 paste: sep, collapse see http://stackoverflow.com/questions/18475202/paste-collapse-in-r
 
+subset, dplyr, tbl_df, paste, string stuff, regex
+
+#### Subsetting
+
+`[]` will always return an object of the same class as the original. It can be used to select more than one element.
+
+`[[]]` is used to extract elems from a list or df. Can only extract one element and the class of the returned object may not be the same as the original.
+
+`$` is used to extract elems from a list or df by name. Similar semantics to `[[]]`.
+
+```{r}
+x <- list(numbers = 5:8, appletree = "a", age = 30)
+class(x[1])
+class(x[[1]])
+x$appletree
+x$numbers
+```
+
+`x[2:3]` is equivalent to `x[-1]`, "all but index 1"
+
+Logical index
+```{r}
+x <- 1:10
+x[x > 6]
+```
+
+Logical vector
+```{r}
+x <- 1:5
+u <- x > 3 # F F F T T
+x[u]
+```
+
+Subsetting by name
+```{r}
+x <- list(a = "ok", b = 3.2, c = 11:14)
+identical(x[[1]], x$a)
+```
+

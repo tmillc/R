@@ -110,19 +110,98 @@ as.numeric(c("a","b","c"))  # no way to coerce char -> num
 
 ### IO, files
 
-dir.create, file.info, file.rename, ls, dir, unlink, 
+#### Files
 
-Filesystem independent path reference, nest dirs by recursive = TRUE
+Filesystem independent path reference, nest dirs by recursive = TRUE. `unlink` deletes files and directories.
 ```{r}
 file.path("folder1", "folder2")
 dir.create(file.path("testdir2", "tesdtdir3"), recursive = TRUE)
 unlink("testdir2", recursive = TRUE)
 ```
 
+`file.info` returns a dataframe with _size_, _isdir_, etc.
+
+file.rename, ls, dir
+
+#### RW Data
+
+* `read.table` (inverse of write.table) and `read.csv` (identical to read.table, but assumes comma-sep and header=true): takes in tabular data and return a data frame
+* `readLines` (inverse of writeLines): reads lines of a text file in as a character vector
+* `dget` (inverse of dput): reads in de-parsed R objects
+* `source` (inverse of dump): reads in R source code
+* `load` (inverse of save): for workspaces
+* `unserialize` (inverse of serialize): for binary data
+
+Specify `read.table` arguments explicitly for speed. Not also `stringsAsFactors` - When it comes across a col that’s a character variable it’ll assume it to be a factor
+
+To load large datasets with `read.table`, make a rough calculation of memory required to hold dataset. If dataset > RAM, probably stop. Set comment.char = “” if no comment lines. Setting colClasses can speed up a LOT.
+
+Quick and dirty way to assign colClasses: Look at the first 100 data to set classes, then set these explicitly on the entire dataset.
+```{r, eval=FALSE}
+initial <- read.table("dataset.txt", nrows = 100)
+classes <- sapply(initial, class)
+tabAll <- read.table("dataset.txt", colClasses = classes)
+```
+
+Setting nrows won’t speed up R but helps with memory usage. Mild overestimate is okay. Using ‘wc’ can tell the # of lines.
+
+#### Memory Estimate
+
+Ex: 1.5 million rows, 120 cols, all numeric. 1.5mil * 120 * 8 (8 bytes per numeric) ~1.34 Gb. Rule of thumb: Need about twice that to load it into R, with overhead, so ~3Gb
+
+#### dump/dput
+
+* preserves metadata contrasting outputing to table/csv
+* edit-able, so in case of corruption, can be opened and examined
+* also good for version control
+* is a textual format rather than a binary
+* not space efficient though
+
+```{r, eval=FALSE}
+y <- data.frame(apple = 0.3, coffee = "almonds")
+dput(y, file = "y.R")
+```
+
+Here we could also dput(y) to print to the console.
+```{r, eval=FALSE}
+y2 <- dget("y.R")
+```
+
+Dump is similar, but deals with multiple objects.
+```{r, eval=FALSE}
+x <- "hello"; y <- 1:4; dump(c("x", "y"), file = "data.R")
+rm(x,y)  # gone from workspace
+source("data.R") # x,y are back
+```
+
+`file`, `bzfile`, `gzfile`: opens connection to a compressed file.
+
+```{r eval=FALSE} 
+data <- read.csv(“data.txt”) 
+con <- file(“data.txt”, “r”) # opening for reading 
+data <- read.csv(con) 
+close(con)
+```
+
+Can use a file connection to read parts of a file. Here, `x[1]` is the first line of test.gz, `x[10]` is the tenth.
+```{r, eval=FALSE}
+con <- gzfile("test.gz")
+x <- readLines(con, 10)
+```
+
+#### Connections
+
+`url`: opens connection to a website, sql, 
+
 ### Functions
 
 args, dotdotdot example .R
 
+Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surround it in backticks.
+
+```{r}
+`[`(c(5,6,7,8), 2)
+```
 #### Scope 
 
 #### anonymous/closure/lambda 

@@ -357,16 +357,75 @@ cbind(patients, my_matrix)       # coerces everything to char</code></pre>
 </div>
 <div id="io-files" class="section level3">
 <h3>IO, files</h3>
-<p>dir.create, file.info, file.rename, ls, dir, unlink,</p>
-<p>Filesystem independent path reference, nest dirs by recursive = TRUE</p>
+<div id="files" class="section level4">
+<h4>Files</h4>
+<p>Filesystem independent path reference, nest dirs by recursive = TRUE. <code>unlink</code> deletes files and directories.</p>
 <pre class="r"><code>file.path(&quot;folder1&quot;, &quot;folder2&quot;)</code></pre>
 <pre><code>## [1] &quot;folder1/folder2&quot;</code></pre>
 <pre class="r"><code>dir.create(file.path(&quot;testdir2&quot;, &quot;tesdtdir3&quot;), recursive = TRUE)
 unlink(&quot;testdir2&quot;, recursive = TRUE)</code></pre>
+<p><code>file.info</code> returns a dataframe with <em>size</em>, <em>isdir</em>, etc.</p>
+<p>file.rename, ls, dir</p>
+</div>
+<div id="rw-data" class="section level4">
+<h4>RW Data</h4>
+<ul>
+<li><code>read.table</code> (inverse of write.table) and <code>read.csv</code> (identical to read.table, but assumes comma-sep and header=true): takes in tabular data and return a data frame</li>
+<li><code>readLines</code> (inverse of writeLines): reads lines of a text file in as a character vector</li>
+<li><code>dget</code> (inverse of dput): reads in de-parsed R objects</li>
+<li><code>source</code> (inverse of dump): reads in R source code</li>
+<li><code>load</code> (inverse of save): for workspaces</li>
+<li><code>unserialize</code> (inverse of serialize): for binary data</li>
+</ul>
+<p>Specify <code>read.table</code> arguments explicitly for speed. Not also <code>stringsAsFactors</code> - When it comes across a col that’s a character variable it’ll assume it to be a factor</p>
+<p>To load large datasets with <code>read.table</code>, make a rough calculation of memory required to hold dataset. If dataset &gt; RAM, probably stop. Set comment.char = “” if no comment lines. Setting colClasses can speed up a LOT.</p>
+<p>Quick and dirty way to assign colClasses: Look at the first 100 data to set classes, then set these explicitly on the entire dataset.</p>
+<pre class="r"><code>initial &lt;- read.table(&quot;dataset.txt&quot;, nrows = 100)
+classes &lt;- sapply(initial, class)
+tabAll &lt;- read.table(&quot;dataset.txt&quot;, colClasses = classes)</code></pre>
+<p>Setting nrows won’t speed up R but helps with memory usage. Mild overestimate is okay. Using ‘wc’ can tell the # of lines.</p>
+</div>
+<div id="memory-estimate" class="section level4">
+<h4>Memory Estimate</h4>
+<p>Ex: 1.5 million rows, 120 cols, all numeric. 1.5mil * 120 * 8 (8 bytes per numeric) ~1.34 Gb. Rule of thumb: Need about twice that to load it into R, with overhead, so ~3Gb</p>
+</div>
+<div id="dumpdput" class="section level4">
+<h4>dump/dput</h4>
+<ul>
+<li>preserves metadata contrasting outputing to table/csv</li>
+<li>edit-able, so in case of corruption, can be opened and examined</li>
+<li>also good for version control</li>
+<li>is a textual format rather than a binary</li>
+<li>not space efficient though</li>
+</ul>
+<pre class="r"><code>y &lt;- data.frame(apple = 0.3, coffee = &quot;almonds&quot;)
+dput(y, file = &quot;y.R&quot;)</code></pre>
+<p>Here we could also dput(y) to print to the console.</p>
+<pre class="r"><code>y2 &lt;- dget(&quot;y.R&quot;)</code></pre>
+<p>Dump is similar, but deals with multiple objects.</p>
+<pre class="r"><code>x &lt;- &quot;hello&quot;; y &lt;- 1:4; dump(c(&quot;x&quot;, &quot;y&quot;), file = &quot;data.R&quot;)
+rm(x,y)  # gone from workspace
+source(&quot;data.R&quot;) # x,y are back</code></pre>
+<p><code>file</code>, <code>bzfile</code>, <code>gzfile</code>: opens connection to a compressed file.</p>
+<pre class="r"><code>data &lt;- read.csv(“data.txt”) 
+con &lt;- file(“data.txt”, “r”) # opening for reading 
+data &lt;- read.csv(con) 
+close(con)</code></pre>
+<p>Can use a file connection to read parts of a file. Here, <code>x[1]</code> is the first line of test.gz, <code>x[10]</code> is the tenth.</p>
+<pre class="r"><code>con &lt;- gzfile(&quot;test.gz&quot;)
+x &lt;- readLines(con, 10)</code></pre>
+</div>
+<div id="connections" class="section level4">
+<h4>Connections</h4>
+<p><code>url</code>: opens connection to a website, sql,</p>
+</div>
 </div>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
 <p>args, dotdotdot example .R</p>
+<p>Interestingly, even <code>[]</code> is a function. Rather, <code>[</code> is. To use it we must surround it in backticks.</p>
+<pre class="r"><code>`[`(c(5,6,7,8), 2)</code></pre>
+<pre><code>## [1] 6</code></pre>
 <div id="scope" class="section level4">
 <h4>Scope</h4>
 </div>
