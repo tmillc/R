@@ -63,7 +63,7 @@ subset, dplyr, tbl_df, paste, string stuff, regex
 
 `[]` will always return an object of the same class as the original. It can be used to select more than one element.
 
-`[[]]` is used to extract elems from a list or df. Can only extract one element and the class of the returned object may not be the same as the original.
+`[[]]` is used to extract elems from a list or df. Can only extract one element (since elements could be of different classes) and the class of the returned object may not be the same as the original.
 
 `$` is used to extract elems from a list or df by name. Similar semantics to `[[]]`.
 
@@ -94,5 +94,19 @@ Subsetting by name
 ```{r}
 x <- list(a = "ok", b = 3.2, c = 11:14)
 identical(x[[1]], x$a)
+identical(x[[1]], x["a"])  # x["a"] == x$a
 ```
 
+Nested extraction with `[[]]`
+```{r}
+x <- list(a = "ok", b = 3.2, c = 11:14)
+x[[c(3,2)]] # 2nd elem of the 3rd elem
+```
+
+`[[]]` can be used with computed indices, `$` can only be used with literal names.
+```{r}
+x <- list(berries = 1:4, pennies = "a")
+name <- "berries"
+x[[name]]
+x$name
+```
