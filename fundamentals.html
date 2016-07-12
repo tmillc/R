@@ -364,14 +364,11 @@ cbind(patients, my_matrix)       # coerces everything to char</code></pre>
 <pre><code>## [1] &quot;folder1/folder2&quot;</code></pre>
 <pre class="r"><code>dir.create(file.path(&quot;testdir2&quot;, &quot;tesdtdir3&quot;), recursive = TRUE)
 unlink(&quot;testdir2&quot;, recursive = TRUE)</code></pre>
-<<<<<<< HEAD
 <p><code>file.info</code> returns a dataframe with <em>size</em>, <em>isdir</em>, etc.</p>
 <p>file.rename, ls, dir</p>
 </div>
 <div id="rw-data" class="section level4">
 <h4>RW Data</h4>
-=======
->>>>>>> ba7aff29e06e8d1542c1737d126c25f141a82a0c
 <ul>
 <li><code>read.table</code> (inverse of write.table) and <code>read.csv</code> (identical to read.table, but assumes comma-sep and header=true): takes in tabular data and return a data frame</li>
 <li><code>readLines</code> (inverse of writeLines): reads lines of a text file in as a character vector</li>
@@ -386,7 +383,6 @@ unlink(&quot;testdir2&quot;, recursive = TRUE)</code></pre>
 <pre class="r"><code>initial &lt;- read.table(&quot;dataset.txt&quot;, nrows = 100)
 classes &lt;- sapply(initial, class)
 tabAll &lt;- read.table(&quot;dataset.txt&quot;, colClasses = classes)</code></pre>
-<<<<<<< HEAD
 <p>Setting nrows won’t speed up R but helps with memory usage. Mild overestimate is okay. Using ‘wc’ can tell the # of lines.</p>
 </div>
 <div id="memory-estimate" class="section level4">
@@ -423,8 +419,6 @@ x &lt;- readLines(con, 10)</code></pre>
 <h4>Connections</h4>
 <p><code>url</code>: opens connection to a website, sql,</p>
 </div>
-=======
->>>>>>> ba7aff29e06e8d1542c1737d126c25f141a82a0c
 </div>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
