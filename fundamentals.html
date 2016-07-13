@@ -226,6 +226,13 @@ div.tocify {
 
 <div id="data-types" class="section level3">
 <h3>Data Types</h3>
+<p>Worthwhile to also look at <code>?mode</code>, but probably has limited practical use.</p>
+<pre class="r"><code>typeof(`[`)</code></pre>
+<pre><code>## [1] &quot;special&quot;</code></pre>
+<pre class="r"><code>mode(`[`)</code></pre>
+<pre><code>## [1] &quot;function&quot;</code></pre>
+<pre class="r"><code>unclass(`[`)</code></pre>
+<pre><code>## .Primitive(&quot;[&quot;)</code></pre>
 <div id="numbers" class="section level4">
 <h4>Numbers</h4>
 <p>Numbers are real (double) by default, we can specify integer by suffixing it with <code>L</code>.</p>
@@ -239,10 +246,37 @@ div.tocify {
 <pre class="r"><code>typeof(1+1i)  # often i might be used as a variable, so best to keep the coefficient</code></pre>
 <pre><code>## [1] &quot;complex&quot;</code></pre>
 </div>
+<div id="logical" class="section level4">
+<h4>Logical</h4>
+<p><code>TRUE</code>, <code>FALSE</code> are the logical constants in R, and <code>T</code>, <code>F</code> are global variables whose initial values are set to these.</p>
+</div>
 <div id="vectors" class="section level4">
 <h4>Vectors</h4>
-<p>Numbers are actually vectors, of length 1, with class depending on their type.</p>
-<p>logical vectors,</p>
+<p>Numbers (and logicals and characters) are actually vectors, of length 1, with class depending on their type. Vectors with length greater than 1 can be indexed, however their elements must have the same type.</p>
+<pre class="r"><code>vector(mode = &quot;character&quot;, length = 3)</code></pre>
+<pre><code>## [1] &quot;&quot; &quot;&quot; &quot;&quot;</code></pre>
+<p>All vectors can have names, it’s an attribute that is get or set by <code>names</code>.</p>
+<pre class="r"><code>v1 &lt;- 1:3
+names(v1) &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+attributes(v1)</code></pre>
+<pre><code>## $names
+## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</code></pre>
+<pre class="r"><code>v1</code></pre>
+<pre><code>## a b c 
+## 1 2 3</code></pre>
+</div>
+<div id="list" class="section level4">
+<h4>List</h4>
+<p>A list is a special kind of vector which can have elements of different types. We can preallocate lists:</p>
+<pre class="r"><code>vector(&quot;list&quot;, 3)</code></pre>
+<pre><code>## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL</code></pre>
 </div>
 <div id="factors" class="section level4">
 <h4>Factors</h4>
@@ -257,52 +291,57 @@ div.tocify {
 <pre><code>##                                                 levels1 levels2 levels3 
 ##       a       a       c       a       c       m       m       a       c 
 ## Levels: m a c</code></pre>
+<p>Additionally we could assign to <code>levels</code> the order we prefer. Calling <code>levels(x)</code> will print the order of the factor levels.</p>
+<pre class="r"><code>levels(fac) &lt;- c(&quot;c&quot;, &quot;m&quot;, &quot;a&quot;)
+table(fac)  # A quick way to see the order of the factors and how many belong to each level</code></pre>
+<pre><code>## fac
+## c m a 
+## 2 4 3</code></pre>
 <p>Levels are numbers behind the scenes:</p>
 <pre class="r"><code>unclass(fac)</code></pre>
 <pre><code>##                                                 levels1 levels2 levels3 
 ##       2       2       3       2       3       1       1       2       3 
 ## attr(,&quot;levels&quot;)
-## [1] &quot;m&quot; &quot;a&quot; &quot;c&quot;</code></pre>
+## [1] &quot;c&quot; &quot;m&quot; &quot;a&quot;</code></pre>
 </div>
 <div id="na" class="section level4">
 <h4>NA</h4>
-<p>A NaN is a type of NA.</p>
-<pre class="r"><code>is.na(NaN)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>Inf + Inf</code></pre>
-<pre><code>## [1] Inf</code></pre>
-<pre class="r"><code>Inf - Inf</code></pre>
-<pre><code>## [1] NaN</code></pre>
-<pre class="r"><code>Inf * Inf</code></pre>
-<pre><code>## [1] Inf</code></pre>
-<pre class="r"><code>Inf / Inf</code></pre>
-<pre><code>## [1] NaN</code></pre>
-<pre class="r"><code>0+0</code></pre>
-<pre><code>## [1] 0</code></pre>
-<pre class="r"><code>0-0</code></pre>
-<pre><code>## [1] 0</code></pre>
-<pre class="r"><code>0*0</code></pre>
-<pre><code>## [1] 0</code></pre>
-<pre class="r"><code>0/0</code></pre>
-<pre><code>## [1] NaN</code></pre>
-<pre class="r"><code>Inf * 0</code></pre>
-<pre><code>## [1] NaN</code></pre>
-<pre class="r"><code>Inf + 0</code></pre>
-<pre><code>## [1] Inf</code></pre>
-<pre class="r"><code>Inf - 0</code></pre>
-<pre><code>## [1] Inf</code></pre>
-<pre class="r"><code>Inf / 0</code></pre>
-<pre><code>## [1] Inf</code></pre>
-<pre class="r"><code>0 / Inf</code></pre>
-<pre><code>## [1] 0</code></pre>
+<p>Results next to each statement for space.</p>
+<pre class="r"><code>Inf + Inf    # Inf
+Inf - Inf    # NaN
+Inf * Inf    # Inf
+Inf / Inf    # NaN
+0+0          # 0
+0-0          # 0
+0*0          # 0
+0/0          # NaN
+Inf * 0      # NaN
+Inf + 0      # Inf
+Inf - 0      # Inf
+Inf / 0      # Inf
+0 / Inf      # 0
+Inf^0        # 1
+0^Inf        # 0
+0^0          # 1
+is.na(NaN)   # TRUE
+is.nan(NA)   # FALSE</code></pre>
 </div>
 <div id="matrix" class="section level4">
 <h4>Matrix</h4>
-<p>Matrices are vectors with a dimension attribute</p>
+<p>Matrices are vectors with a dimension attribute. Note that the matrix is populated column-by-column.</p>
 <pre class="r"><code>v1 &lt;- 1:6
 dim(v1) &lt;- c(2,3)
-class(v1)</code></pre>
-<pre><code>## [1] &quot;matrix&quot;</code></pre>
+print(v1)</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    3    5
+## [2,]    2    4    6</code></pre>
+<p>Calling <code>attributes</code> on an object prints that object’s attributes, or attributes can also be assigned this way.</p>
+<pre class="r"><code>m1&lt;-matrix(nrow = 3, ncol = 2)
+attributes(m1)</code></pre>
+<pre><code>## $dim
+## [1] 3 2</code></pre>
+<pre class="r"><code>identical(attributes(m1)$dim, dim(m1))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>Giving dimension names to a matrix</p>
 <pre class="r"><code>A &lt;- matrix(nrow = 3, ncol = 2)
 dimnames(A) &lt;- list(c(&quot;row1&quot;, &quot;row2&quot;, &quot;row3&quot;), c(&quot;col1&quot;, &quot;col2&quot;))
@@ -319,16 +358,6 @@ dimnames(A) &lt;- list(rnames, cnames); print(A)</code></pre>
 ## row1   NA   NA
 ## row2   NA   NA
 ## row3   NA   NA</code></pre>
-<p>cbind and rbind</p>
-<pre class="r"><code>rbind(1:3, 6:8)</code></pre>
-<pre><code>##      [,1] [,2] [,3]
-## [1,]    1    2    3
-## [2,]    6    7    8</code></pre>
-<pre class="r"><code>cbind(1:3, 6:8)</code></pre>
-<pre><code>##      [,1] [,2]
-## [1,]    1    6
-## [2,]    2    7
-## [3,]    3    8</code></pre>
 </div>
 <div id="data-frames" class="section level4">
 <h4>Data Frames</h4>
@@ -441,6 +470,8 @@ while(z&gt;=3 &amp;&amp; z&lt;=10) {
 }</code></pre>
 <pre><code>## [1] 5
 ## [1] 4
+## [1] 3
+## [1] 4
 ## [1] 3</code></pre>
 </div>
 <div id="break" class="section level4">
@@ -534,6 +565,8 @@ cbind(patients, my_matrix)       # coerces everything to char</code></pre>
 <pre class="r"><code>as.numeric(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;))  # no way to coerce char -&gt; num</code></pre>
 <pre><code>## Warning: NAs introduced by coercion</code></pre>
 <pre><code>## [1] NA NA NA</code></pre>
+<pre class="r"><code>typeof(c(TRUE, &quot;hi&quot;))</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
 </div>
 <div id="io-files" class="section level3">
 <h3>IO, files</h3>
@@ -612,8 +645,23 @@ x &lt;- readLines(con, 10)</code></pre>
 ## 
 ## $sd
 ## [1] 1</code></pre>
-<div id="argument-order" class="section level4">
-<h4>Argument order</h4>
+<div id="arguments" class="section level4">
+<h4>Arguments</h4>
+<p>An interesting look at how <code>formals</code> and <code>alist</code> work</p>
+<pre class="r"><code>f &lt;- function() x
+formals(f) &lt;- al &lt;- alist(x =, y = NULL, ... =)
+print(f)</code></pre>
+<pre><code>## function (x, y = NULL, ...) 
+## x</code></pre>
+<pre class="r"><code>print(al)</code></pre>
+<pre><code>## $x
+## 
+## 
+## $y
+## NULL
+## 
+## $...</code></pre>
+<p>The following demonstrates some things about argument order.</p>
 <pre class="r"><code>mydata &lt;- rnorm(100)
 sd(mydata)      # mydata is passed as the first argument, the rest are default
 sd(x = mydata)  # equivalent to above
@@ -657,6 +705,10 @@ print(x+y)</code></pre>
 <p>Element-wise comparison</p>
 <pre class="r"><code>x == 2</code></pre>
 <pre><code>## [1] FALSE FALSE  TRUE FALSE</code></pre>
+</div>
+</div>
+<div id="recycling" class="section level3">
+<h3>Recycling</h3>
 <p>When adding a scalar (in R, a vector of length 1) to a vector, R computes x+2 by first creating a vector of 2’s the length of x.</p>
 <pre class="r"><code>x+2</code></pre>
 <pre><code>## [1] 2 3 4 5</code></pre>
@@ -668,7 +720,84 @@ print(x+y)</code></pre>
 <pre><code>## Warning in c(1, 2, 3, 4) + c(0, 1, 2): longer object length is not a
 ## multiple of shorter object length</code></pre>
 <pre><code>## [1] 1 3 5 4</code></pre>
-<p>Vectorized operations on matrices</p>
+</div>
+<div id="vectorize" class="section level3">
+<h3>Vectorize</h3>
+<p>See <code>?Vectorize</code> to better understand this</p>
+</div>
+<div id="lapply" class="section level3">
+<h3>lapply</h3>
+<p>The <code>*apply</code> family apply functions over a list or vector.</p>
+<p>Maybe we need a set of random uniform variables: 1 runif, then 3 runifs, then 6 runifs:</p>
+<pre class="r"><code>x &lt;- c(1,3,6)
+lapply(x, runif) </code></pre>
+<pre><code>## [[1]]
+## [1] 0.3051048
+## 
+## [[2]]
+## [1] 0.8220289 0.9631391 0.1759924
+## 
+## [[3]]
+## [1] 0.9183327 0.3420982 0.8318903 0.2345035 0.8545883 0.7402687</code></pre>
+<p>We can apply a function to every list element:</p>
+<pre class="r"><code>x &lt;- list(a = 1:5, b = rnorm(10))
+lapply(x, mean)</code></pre>
+<pre><code>## $a
+## [1] 3
+## 
+## $b
+## [1] -0.1662779</code></pre>
+<p>We can pass arguments to the function:</p>
+<pre class="r"><code>x &lt;- list(a = sample(letters, 6), b = sample(letters, 3), c = sample(letters, 5))
+lapply(x, paste, collapse=&quot;&quot;)</code></pre>
+<pre><code>## $a
+## [1] &quot;rtzopw&quot;
+## 
+## $b
+## [1] &quot;kao&quot;
+## 
+## $c
+## [1] &quot;gdcop&quot;</code></pre>
+<p>Using an anonymous function, we can decide further what exactly to do with the input to <code>lapply</code>. Here, we are making sequences from 0 to 1 of length given by the input object.</p>
+<pre class="r"><code>lapply(c(3, 4, 5), function(x) seq(from = 0, to = 1, length = x))</code></pre>
+<pre><code>## [[1]]
+## [1] 0.0 0.5 1.0
+## 
+## [[2]]
+## [1] 0.0000000 0.3333333 0.6666667 1.0000000
+## 
+## [[3]]
+## [1] 0.00 0.25 0.50 0.75 1.00</code></pre>
+</div>
+<div id="sapply" class="section level3">
+<h3>sapply</h3>
+<p><code>sapply</code> is a wrapper to <code>lapply</code>, by default returning a vector, matrix or array.</p>
+<pre class="r"><code>x &lt;- list(a = 1:5, b = rnorm(10))
+sapply(x, mean)</code></pre>
+<pre><code>##          a          b 
+##  3.0000000 -0.2009713</code></pre>
+<p>Using <code>lapply</code> here returns a list instead of a simple vector, which introduces unnecessary overhead, requiring almost 7 times as much space for a simple set of integers.</p>
+<pre class="r"><code>x &lt;- 1:100
+
+doubleMe &lt;- function(n) n*2
+y &lt;- sapply(x, doubleMe)
+
+doubleMe &lt;- function(n) n*2
+z &lt;- lapply(x, doubleMe)
+
+as.numeric(object.size(z) / object.size(y))</code></pre>
+<pre><code>## [1] 6.714286</code></pre>
+<p>Here we have a list of matrices, and extract the first columns of each. Because returning a vector doesn’t quite make sense here, <code>sapply</code> smartly gives us a list, as <code>lapply</code> would do.</p>
+<pre class="r"><code>x &lt;- list(a = matrix(1:4, 2,2), b = matrix(1:6, 3,2))
+sapply(x, function(y) y[,1])</code></pre>
+<pre><code>## $a
+## [1] 1 2
+## 
+## $b
+## [1] 1 2 3</code></pre>
+</div>
+<div id="matrices" class="section level3">
+<h3>Matrices</h3>
 <pre class="r"><code>x &lt;- matrix(1:4, 2,2); y &lt;- matrix(rep(10,4), 2,2)
 x / y  # element-wise division</code></pre>
 <pre><code>##      [,1] [,2]
@@ -682,10 +811,10 @@ x / y  # element-wise division</code></pre>
 <pre><code>##      [,1] [,2]
 ## [1,]   40   40
 ## [2,]   60   60</code></pre>
+<p>(some topic generally on functions)</p>
 <p>Interestingly, even <code>[]</code> is a function. Rather, <code>[</code> is. To use it we must surround it in backticks.</p>
 <pre class="r"><code>`[`(c(5,6,7,8), 2)</code></pre>
 <pre><code>## [1] 6</code></pre>
-</div>
 <div id="scope" class="section level4">
 <h4>Scope</h4>
 </div>
