@@ -15,6 +15,7 @@ output:
 #### Sample
 ```{r}
 sample(c("yes","no","maybe"), replace = TRUE, 10, prob=c(0.8,0.1,0.1))
+iris[sample(nrow(iris), 5), ] # 5 random observations from iris
 ```
 
 #### Sequence
@@ -78,7 +79,9 @@ x <- list(numbers = 5:8, appletree = "a", age = 30)
 class(x[1])
 class(x[[1]])
 x$appletree
-x$numbers
+identical(x$appletree, x[["appletree"]])
+identical(x$appletree, x["appletree"])
+x["appletree"]
 ```
 
 Removing indices
