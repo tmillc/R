@@ -20,7 +20,8 @@ sample(c("yes","no","maybe"), replace = TRUE, 10, prob=c(0.8,0.1,0.1))
 #### Sequence
 ```{r}
 seq(along.with = 15:11) == seq_along(1:5) # 1 2 3 4 5
-seq(4,11, length=20) # can specify length of seq
+seq(4,11, length=20)
+seq(4,11, by=3.2)
 ```
 
 We can also sequence along dates

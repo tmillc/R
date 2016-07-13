@@ -12,6 +12,13 @@ output:
 
 ### Data Types
 
+Worthwhile to also look at `?mode`, but probably has limited practical use.
+```{r}
+typeof(`[`)
+mode(`[`)
+unclass(`[`)
+```
+
 #### Numbers
 
 Numbers are real (double) by default, we can specify integer by suffixing it with `L`.
@@ -26,11 +33,33 @@ typeof(2L)
 typeof(1+1i)  # often i might be used as a variable, so best to keep the coefficient
 ```
 
+
+#### Logical
+
+`TRUE`, `FALSE` are the logical constants in R, and `T`, `F` are global variables whose initial values are set to these. 
+
 #### Vectors
 
-Numbers are actually vectors, of length 1, with class depending on their type. 
+Numbers (and logicals and characters) are actually vectors, of length 1, with class depending on their type. Vectors with length greater than 1 can be indexed, however their elements must have the same type.
 
-logical vectors,
+```{r}
+vector(mode = "character", length = 3)
+```
+
+All vectors can have names, it's an attribute that is get or set by `names`. 
+```{r}
+v1 <- 1:3
+names(v1) <- c("a", "b", "c")
+attributes(v1)
+v1
+```
+
+#### List
+
+A list is a special kind of vector which can have elements of different types. We can preallocate lists:
+```{r}
+vector("list", 3)
+```
 
 #### Factors
 
@@ -46,6 +75,12 @@ Reorder the factor levels:
 fac <- relevel(fac, ref="m"); print(fac)
 ```
 
+Additionally we could assign to `levels` the order we prefer. Calling `levels(x)` will print the order of the factor levels.
+```{r}
+levels(fac) <- c("c", "m", "a")
+table(fac)  # A quick way to see the order of the factors and how many belong to each level
+```
+
 Levels are numbers behind the scenes:
 ```{r}
 unclass(fac)
@@ -53,31 +88,43 @@ unclass(fac)
 
 #### NA
 
-A NaN is a type of NA.
-```{r}
-is.na(NaN)
-Inf + Inf
-Inf - Inf
-Inf * Inf
-Inf / Inf
-0+0
-0-0
-0*0
-0/0
-Inf * 0
-Inf + 0
-Inf - 0
-Inf / 0
-0 / Inf
+Results next to each statement for space.
+```{r, eval=FALSE}
+Inf + Inf    # Inf
+Inf - Inf    # NaN
+Inf * Inf    # Inf
+Inf / Inf    # NaN
+0+0          # 0
+0-0          # 0
+0*0          # 0
+0/0          # NaN
+Inf * 0      # NaN
+Inf + 0      # Inf
+Inf - 0      # Inf
+Inf / 0      # Inf
+0 / Inf      # 0
+Inf^0        # 1
+0^Inf        # 0
+0^0          # 1
+is.na(NaN)   # TRUE
+is.nan(NA)   # FALSE
 ```
 
 #### Matrix
 
-Matrices are vectors with a dimension attribute
+Matrices are vectors with a dimension attribute. Note that the matrix is populated column-by-column.
 ```{r}
 v1 <- 1:6
 dim(v1) <- c(2,3)
-class(v1)
+print(v1)
+```
+
+Calling `attributes` on an object prints that object's attributes, or attributes can also be assigned this way. 
+
+```{r}
+m1<-matrix(nrow = 3, ncol = 2)
+attributes(m1)
+identical(attributes(m1)$dim, dim(m1))
 ```
 
 Giving dimension names to a matrix
@@ -92,12 +139,6 @@ Generating dimension names for a matrix based on a prefix
 rnames <- rownames(A, do.NULL=FALSE, prefix="eqn")
 cnames <- colnames(A, do.NULL=FALSE, prefix="var")
 dimnames(A) <- list(rnames, cnames); print(A)
-```
-
-cbind and rbind
-```{r}
-rbind(1:3, 6:8)
-cbind(1:3, 6:8)
 ```
 
 #### Data Frames
@@ -265,6 +306,7 @@ data.frame(patients, my_matrix)  # patients is char, matrix is matrix
 as.logical(-2:2)
 as.numeric(TRUE)
 as.numeric(c("a","b","c"))  # no way to coerce char -> num
+typeof(c(TRUE, "hi"))
 ```
 
 ### IO, files
@@ -360,7 +402,17 @@ Functions are first-class in R: they can be passed, and defined in a scope. The 
 formals(rnorm)
 ```
 
-#### Argument order
+#### Arguments
+
+An interesting look at how `formals` and `alist` work
+```{r}
+f <- function() x
+formals(f) <- al <- alist(x =, y = NULL, ... =)
+print(f)
+print(al)
+```
+
+The following demonstrates some things about argument order.
 ```{r, eval=FALSE}
 mydata <- rnorm(100)
 sd(mydata)      # mydata is passed as the first argument, the rest are default
@@ -420,6 +472,8 @@ Element-wise comparison
 x == 2
 ```
 
+### Recycling
+
 When adding a scalar (in R, a vector of length 1) to a vector, R computes x+2 by first creating a vector of 2's the length of x.
 ```{r}
 x+2
@@ -433,7 +487,23 @@ c(1,2,3,4) + c(0,10)
 c(1,2,3,4) + c(0,1,2) 
 ```
 
-Vectorized operations on matrices
+### Vectorize
+
+See `?Vectorize` to better understand this
+
+### *apply
+
+The `*apply` family apply functions over a list or vector. 
+
+`sapply` is a wrapper to `lapply`
+```{r}
+x <- 1:4
+doubleMe <- function(n) n*2
+y <- sapply(x, doubleMe)
+print(y)
+```
+
+### Matrices
 ```{r}
 x <- matrix(1:4, 2,2); y <- matrix(rep(10,4), 2,2)
 x / y  # element-wise division
@@ -441,11 +511,15 @@ x * y  # element-wise multiplication
 x %*% y  # True matrix multiplication
 ```
 
+
+(some topic generally on functions)
+
 Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surround it in backticks.
 
 ```{r}
 `[`(c(5,6,7,8), 2)
 ```
+
 #### Scope 
 
 #### anonymous/closure/lambda 
@@ -461,3 +535,4 @@ f1(-1)
 ```
 
 >A closure has three components, its formals (its argument list), its body (expr in the ‘Usage’ section) and its environment which provides the enclosure of the evaluation frame when the closure is used.
+
