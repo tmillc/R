@@ -544,6 +544,38 @@ sapply(x, print)
 
 Using `lapply` here returns a list instead of a simple vector, which introduces unnecessary overhead, requiring almost 7 times as much space for a simple set of integers.
 ```{r}
+x <- 1:4
+x <- c(1,3,6)
+lapply(x, runif) 
+```
+
+We can apply a function to every list element:
+```{r}
+x <- list(a = 1:5, b = rnorm(10))
+lapply(x, mean)
+```
+
+We can pass arguments to the function:
+```{r}
+x <- list(a = sample(letters, 6), b = sample(letters, 3), c = sample(letters, 5))
+lapply(x, paste, collapse="")
+```
+
+Using an anonymous function, we can decide further what exactly to do with the input to `lapply`. Here, we are making sequences from 0 to 1 of length given by the input object.
+```{r}
+lapply(c(3, 4, 5), function(x) seq(from = 0, to = 1, length = x))
+```
+
+### sapply
+
+`sapply` is a wrapper to `lapply`, by default returning a vector, matrix or array. 
+```{r}
+x <- list(a = 1:5, b = rnorm(10))
+sapply(x, mean)
+```
+
+Using `lapply` here returns a list instead of a simple vector, which introduces unnecessary overhead, requiring almost 7 times as much space for a simple set of integers.
+```{r}
 x <- 1:100
 
 doubleMe <- function(n) n*2
@@ -553,9 +585,16 @@ doubleMe <- function(n) n*2
 z <- lapply(x, doubleMe)
 
 as.numeric(object.size(z) / object.size(y))
+print(y)
 ```
 
 Here we have a list of matrices, and extract the first columns of each. Because returning a vector doesn't quite make sense here, `sapply` smartly gives us a list, as `lapply` would do.
+```{r}
+x <- list(a = matrix(1:4, 2,2), b = matrix(1:6, 3,2))
+sapply(x, function(y) y[,1])
+```
+
+### Matrices
 ```{r}
 x <- list(a = matrix(1:4, 2,2), b = matrix(1:6, 3,2))
 sapply(x, function(y) y[,1])
