@@ -6,19 +6,18 @@ output:
     toc_depth: 4
     toc_float: 
       collapsed: false
-    theme: yeti
     css: style.css
 ---
 
-### Generating Patterns
+# Generating Patterns
 
-#### Sample
+## Sample
 ```{r}
 sample(c("yes","no","maybe"), replace = TRUE, 10, prob=c(0.8,0.1,0.1))
 iris[sample(nrow(iris), 5), ] # 5 random observations from iris
 ```
 
-#### Sequence
+## Sequence
 ```{r}
 seq(along.with = 15:11) == seq_along(1:5) # 1 2 3 4 5
 seq(4,11, length=20)
@@ -30,15 +29,19 @@ We can also sequence along dates
 seq(as.Date("2000/1/1"), by = "month", length.out=12)
 ```
 
-#### Replicate
+## Replicate
 ```{r}
 rep(c(1,2), times = 10) # 1 2 1 2 ...
 rep(c(1,2), each = 10) # 111..222...
 ```
 
-### Generating Noise
+# Generating Noise
 
-#### rnorm
+## Distributions {.tabset .tabset-fade .tabset-pills}
+
+R comes with operations for density/mass function, cumulative distribution function, quantile function, and random generation for a variety of distributions. These are named dxxx, pxxx, qxxx and rxxx respectively.
+
+### Normal
 
 We can specify means and sd for each individual number, or set a single value which is coerced into an appropriate length ie `rep(value, count)` for each number, otherwise by default `mean = 0` and `sd = 1`. 
 ```{r}
@@ -46,7 +49,29 @@ rnorm(3) # 3 random variables
 rnorm(3, c(1, 10, 100)) # specifying means
 ```
 
-#### By sampling
+### Log-normal
+
+### Binomial
+
+### Multinomial
+
+### Poisson
+
+### Chi-squared
+
+### Exponential
+
+### Student's t
+
+### Uniform
+
+### Others
+
+Cauchy, geometric, hypergeometric, gamma, beta, F, negative binomial, Weibull.
+
+>For less common distributions of test statistics see `pbirthday`, `dsignrank`, `ptukey` and `dwilcox` (and see the ‘See Also’ section of `cor.test`)
+
+## By sampling
 
 Sampling 100 elements randomly from a set containing 1000 rnorms and 1000 NAs.
 ```{r}
@@ -60,7 +85,7 @@ Since R represents TRUE as 1 and FALSE as 0, we can sum the TRUE and FALSE to ge
 totalNAs <- sum(my_na); print(totalNAs)
 ```
 
-#### jitter()
+## jitter()
 
 Using jitter to make a noisy sinewave
 ```{r}
@@ -68,13 +93,15 @@ x <- seq(-6, 6, by=0.2)
 plot(x, jitter(sin(x), factor = 1, amount = 0.2))
 ```
 
-### Data Manipulation
+# Data Manipulation
 
 paste: sep, collapse see http://stackoverflow.com/questions/18475202/paste-collapse-in-r
 
 subset, dplyr, tbl_df, paste, string stuff, regex
 
-#### Subsetting
+## Subsetting {.tabset .tabset-fade .tabset-pills}
+
+### Extract
 
 `[]` will always return an object of the same class as the original. It can be used to select more than one element.
 
@@ -97,19 +124,6 @@ Removing indices
 x <- 11:20
 x[2:10]  # equivalent to `x[-1]`, "all but index 1"
 x[c(-1,-5,-6)] # equivalent to x[-c(1,5,6)]
-```
-
-Logical index
-```{r}
-x <- 1:10
-x[x > 6]
-```
-
-Logical vector
-```{r}
-x <- 1:5
-u <- x > 3 # F F F T T
-x[u]
 ```
 
 Subsetting by name
@@ -155,6 +169,21 @@ x[["lam"]]
 x[["lam", exact = FALSE]]
 ```
 
+### Logical
+
+Logical index
+```{r}
+x <- 1:10
+x[x > 6]
+```
+
+Logical vector
+```{r}
+x <- 1:5
+u <- x > 3 # F F F T T
+x[u]
+```
+
 Removing NAs by subsetting by a logical vector
 ```{r}
 x <- c(1,2,NA,4,NA)
@@ -179,11 +208,16 @@ good <- complete.cases(d)
 d[good, ]  # keep good rows only, keep all columns
 ```
 
-Splitting on a factor in a manner similar to `tapply`, we can divide a vector into subsets and then overfit each subset with a 5th degree polynomial, just for fun.
+### Factors
 ```{r}
+library(ggplot2)
 x <- c(rnorm(10), 1:10+rnorm(10), sin(1:10))
 fac <- gl(3, 10, labels=c("normal", "linear", "sine"))
 plot(x)
+```
+
+Splitting on a factor in a manner similar to `tapply`, we can divide a vector into subsets. and then overfit each subset with a 5th degree polynomial, just for fun.
+```{r}
 y <- split(x,fac)
 qplot(y=x, facets=fac ~ .) + geom_smooth(method="lm", formula = y ~ poly(x, 5))
 ```

@@ -6,11 +6,10 @@ output:
     toc_depth: 4
     toc_float:
       collapsed: false
-    theme: yeti
     css: style.css
 ---
 
-### Data Types
+# Data Types {.tabset .tabset-fade .tabset-pills}
 
 Worthwhile to also look at `?mode`, but probably has limited practical use.
 ```{r}
@@ -19,7 +18,7 @@ mode(`[`)
 unclass(`[`)
 ```
 
-#### Numbers
+## Numbers
 
 Numbers are real (double) by default, we can specify integer by suffixing it with `L`.
 ```{r}
@@ -27,18 +26,18 @@ typeof(2)
 typeof(2L)
 ```
 
-#### Complex
+## Complex
 
 ```{r}
 typeof(1+1i)  # often i might be used as a variable, so best to keep the coefficient
 ```
 
 
-#### Logical
+## Logical
 
 `TRUE`, `FALSE` are the logical constants in R, and `T`, `F` are global variables whose initial values are set to these. 
 
-#### Vectors
+## Vectors
 
 Numbers (and logicals and characters) are actually vectors, of length 1, with class depending on their type. Vectors with length greater than 1 can be indexed, however their elements must have the same type.
 
@@ -54,14 +53,14 @@ attributes(v1)
 v1
 ```
 
-#### List
+## List
 
 A list is a special kind of vector which can have elements of different types. We can preallocate lists:
 ```{r}
 vector("list", 3)
 ```
 
-#### Factors
+## Factors
 
 A factor is like a bunch of labels. “Yes”, “No”, “Maybe” for instance. In that case those three would be the Levels. The actual factor would be something like yes yes yes no maybe no no yes maybe. Factors are ordered or unordered. Yes, no, maybe is unordered but child, parent, grandparent would probably be ordered.
 
@@ -86,12 +85,23 @@ Levels are numbers behind the scenes:
 unclass(fac)
 ```
 
-We can generate factor levels with `gl`
+We can generate factor levels with `gl`:
+
+`gl(n, k, length = n*k, labels = seq_len(n), ordered = FALSE)` where `n` is the number of levels, `k` is the number of replications for each level.
 ```{r}
 gl(3, 5, labels = c("Yes", "No", "Maybe"))
+gl(2,1,8)
+gl(2,2,8)
 ```
 
-#### NA
+`interaction` gives us a factor which is the result of interactions of factors.
+```{r}
+f1 <- gl(2, 1, 8, labels = c("broken", "fixed"))
+f2 <- gl(4, 2, 8, labels = c("spade", "shovel", "rake", "bin"))
+interaction(f1,f2)
+```
+
+## NA
 
 Results next to each statement for space.
 ```{r, eval=FALSE}
@@ -115,7 +125,7 @@ is.na(NaN)   # TRUE
 is.nan(NA)   # FALSE
 ```
 
-#### Matrix
+## Matrix
 
 Matrices are vectors with a dimension attribute. Note that the matrix is populated column-by-column.
 ```{r}
@@ -146,17 +156,31 @@ cnames <- colnames(A, do.NULL=FALSE, prefix="var")
 dimnames(A) <- list(rnames, cnames); print(A)
 ```
 
-#### Data Frames
+## Data Frames
 
-DFs are to matrices what lists are to vectors. Columns must be a single class. Tidy data says to have each row a single observation.
-
+DFs are to matrices what lists are to vectors. Columns must be a single class, but each column can be any class. Note that recycling occurs to preserve dimensions. They have an attribute `$row.names` which can be set.
 ```{r}
-data.frame(id = 1:4, truth = c(T,T,F,T))
+df <- data.frame(id = 1:4, truth = c(T,T,F,T), d = matrix(21:24, nrow=2, ncol=2))
+row.names(df) <- letters[5:8]
 ```
 
-### Control Structures
+Data frames can be converted to a matrix with `data.matrix`, where values will be coerced so as to all be the same class.
+```{r}
+data.matrix(df)
+```
+# Control Structures {.tabset .tabset-fade .tabset-pills}
 
-#### if/(else if)/(else)
+Note that we can assign from control structures:
+```{r}
+y <- if(3 > 2) {
+  "yep"
+} else {
+  "uh oh"
+}
+print(y)
+```
+
+## if/(else if)/(else)
 
 An `else if` or `else` statement is optional following `if` in R.
 ```{r}
@@ -170,7 +194,7 @@ if(3 > 2) {
 print(y)
 ```
 
-#### For
+## For
 
 The following examples are equivalent:
 ```{r}
@@ -208,7 +232,7 @@ for (i in seq_len(nrow(x))) {
 }
 ```
 
-#### While
+## While
 ```{r}
 count <- 0
 while(count<10) {
@@ -232,21 +256,24 @@ while(z>=3 && z<=10) {
 }
 ```
 
-#### Break
+## Break
 
 **Note from ?control**
 
 >it is a common mistake to forget to put `{...}` around your statements, e.g., after `if(...)` or `for(....)`. In particular, you should not have a newline between `}` and `else` to avoid a syntax error in entering an `if ... else` construct at the keyboard or via source. For that reason, one (somewhat extreme) attitude of defensive programming is to always use braces, e.g., for if clauses.
 
-#### Ifelse
+## Ifelse
 ```{r}
 ifelse(3 > 2, yes = print("yes"), no = print("no"))
 ifelse(3 < 2, yes = print("yes"), no = print("no"))
 ```
 
-#### Switch
+## Switch
 
-#### Repeat
+```{r}
+```
+
+## Repeat
 
 Warning: not guarenteed to halt, better to set hard limit on number of iterations, and report con-/di-vergence.
 ```{r, eval=FALSE}
@@ -264,7 +291,7 @@ repeat {
 }
 ```
 
-#### Next
+## Next
 
 Here we skip the first 20 iterations and `doSomething` on the last 80.
 ```{r, eval=FALSE}
@@ -276,23 +303,9 @@ for(i in 1:100) {
 }
 ```
 
-#### Return
+## Return
 
-
-
-#### Assigning
-
-We can assign from control structures:
-```{r}
-y <- if(3 > 2) {
-  "yep"
-} else {
-  "uh oh"
-}
-print(y)
-```
-
-### Coercion
+# Coercion
 
 Coerce to matrix, note the T's and F's
 ```{r}
@@ -314,9 +327,9 @@ as.numeric(c("a","b","c"))  # no way to coerce char -> num
 typeof(c(TRUE, "hi"))
 ```
 
-### IO, files
+# IO, files
 
-#### Files
+## Files
 
 Filesystem independent path reference, nest dirs by recursive = TRUE. `unlink` deletes files and directories.
 ```{r}
@@ -329,7 +342,7 @@ unlink("testdir2", recursive = TRUE)
 
 file.rename, ls, dir
 
-#### RW Data
+## RW Data
 
 * `read.table` (inverse of write.table) and `read.csv` (identical to read.table, but assumes comma-sep and header=true): takes in tabular data and return a data frame
 * `readLines` (inverse of writeLines): reads lines of a text file in as a character vector
@@ -351,11 +364,11 @@ tabAll <- read.table("dataset.txt", colClasses = classes)
 
 Setting nrows won’t speed up R but helps with memory usage. Mild overestimate is okay. Using ‘wc’ can tell the # of lines.
 
-#### Memory Estimate
+## Memory Estimate
 
 Ex: 1.5 million rows, 120 cols, all numeric. 1.5mil * 120 * 8 (8 bytes per numeric) ~1.34 Gb. Rule of thumb: Need about twice that to load it into R, with overhead, so ~3Gb
 
-#### dump/dput
+## dump/dput
 
 * preserves metadata contrasting outputing to table/csv
 * edit-able, so in case of corruption, can be opened and examined
@@ -395,82 +408,11 @@ con <- gzfile("test.gz")
 x <- readLines(con, 10)
 ```
 
-#### Connections
+## Connections
 
 `url`: opens connection to a website, sql, 
 
-### Functions
-
-Functions are first-class in R: they can be passed, and defined in a scope. The return value is the last expression evaluated.
-
-Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surround it in backticks.
-
-```{r}
-`[`(c(5,6,7,8), 2)
-```
-
-#### Arguments
-
-```{r}
-formals(rnorm)
-```
-
-An interesting look at how `formals` and `alist` work
-```{r}
-f <- function() x
-formals(f) <- al <- alist(x =, y = NULL, ... =)
-print(f)
-print(al)
-```
-
-The following demonstrates some things about argument order.
-```{r, eval=FALSE}
-mydata <- rnorm(100)
-sd(mydata)      # mydata is passed as the first argument, the rest are default
-sd(x = mydata)  # equivalent to above
-sd(x = mydata, na.rm = FALSE)
-sd(na.rm = FALSE, x = mydata) # fine, but not recommended to change around order
-sd(na.rm = FALSE, mydata)     # since mydata is unnamed, it will be assigned to the first expected argument, x
-```
-
-When an argument is matched by name, it is "taken out" of the list, and following arguments will be matched in order.
-
-#### Lazy Evaluation
-
-Here, `c` has a default value, but `b` doesn't, but `b` isn't used so we don't really care.
-```{r}
-f1 <- function(a, b, c = TRUE) {
-  a^2
-}
-
-f2 <- function(a,b) {
-  print(a)
-  print(b)
-}
-```
-
-Calling `f2(45)` will print 45, THEN error, because 45 will match for `a`, and `b` will be unmatched when it is called.
-
-#### ...
-
-`...` argument indicates a variable number of arguments that are usually passed on to other functions.
-
-```{r}
-myplot <- function(x, y, type="l", ... ) { # extends plot()
-  plot(x, y, type = type, ... )
-}
-```
-
-`paste` doesn't know how many objects it will be pasting, so ... is the first argument
-```{r}
-args(paste)
-```
-
-**NOTE**: Arguments that appear after the ... must be explicitly named (and cannot be partially matched).
-
-dotdotdot example .R
-
-#### Vectorized Operations
+# Vectorized Operations
 
 Element-wise addition of vectors
 ```{r}
@@ -483,7 +425,7 @@ Element-wise comparison
 x == 2
 ```
 
-### Recycling
+## Recycling
 
 When adding a scalar (in R, a vector of length 1) to a vector, R computes x+2 by first creating a vector of 2's the length of x.
 ```{r}
@@ -498,7 +440,7 @@ c(1,2,3,4) + c(0,10)
 c(1,2,3,4) + c(0,1,2) 
 ```
 
-### Matrices
+## Matrices
 ```{r}
 x <- matrix(1:4, 2,2); y <- matrix(rep(10,4), 2,2)
 x / y  # element-wise division
@@ -506,9 +448,11 @@ x * y  # element-wise multiplication
 x %*% y  # True matrix multiplication
 ```
 
-### lapply
+## Loop Functions {.tabset .tabset-fade .tabset-pills}
 
-The `*apply` family apply functions over a list or vector. 
+The `*apply` family apply functions over a list or vector. See also [https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/]. Much of what these functions do is covered by the `plyr` library.
+
+### lapply
 
 Maybe we need a set of random uniform variables: 1 runif, then 3 runifs, then 6 runifs:
 ```{r}
@@ -544,38 +488,6 @@ sapply(x, print)
 
 Using `lapply` here returns a list instead of a simple vector, which introduces unnecessary overhead, requiring almost 7 times as much space for a simple set of integers.
 ```{r}
-x <- 1:4
-x <- c(1,3,6)
-lapply(x, runif) 
-```
-
-We can apply a function to every list element:
-```{r}
-x <- list(a = 1:5, b = rnorm(10))
-lapply(x, mean)
-```
-
-We can pass arguments to the function:
-```{r}
-x <- list(a = sample(letters, 6), b = sample(letters, 3), c = sample(letters, 5))
-lapply(x, paste, collapse="")
-```
-
-Using an anonymous function, we can decide further what exactly to do with the input to `lapply`. Here, we are making sequences from 0 to 1 of length given by the input object.
-```{r}
-lapply(c(3, 4, 5), function(x) seq(from = 0, to = 1, length = x))
-```
-
-### sapply
-
-`sapply` is a wrapper to `lapply`, by default returning a vector, matrix or array. 
-```{r}
-x <- list(a = 1:5, b = rnorm(10))
-sapply(x, mean)
-```
-
-Using `lapply` here returns a list instead of a simple vector, which introduces unnecessary overhead, requiring almost 7 times as much space for a simple set of integers.
-```{r}
 x <- 1:100
 
 doubleMe <- function(n) n*2
@@ -594,10 +506,11 @@ x <- list(a = matrix(1:4, 2,2), b = matrix(1:6, 3,2))
 sapply(x, function(y) y[,1])
 ```
 
-### Matrices
+We can automatically remove NAs that interfere with calculations by setting `na.rm = TRUE`. 
 ```{r}
-x <- list(a = matrix(1:4, 2,2), b = matrix(1:6, 3,2))
-sapply(x, function(y) y[,1])
+s <- split(airquality, airquality$Month)
+sapply(s, function(x) colMeans(x[, c("Ozone", "Solar.R", "Wind")]))
+sapply(s, function(x) colMeans(x[, c("Ozone", "Solar.R", "Wind")], na.rm = TRUE))
 ```
 
 ### apply 
@@ -651,7 +564,6 @@ microbenchmark(apply(x,2,mean))
 ```
 
 Here we feed a matrix with 20 rows, 10 columns into `apply`, and have it return the 25%, and 75% distribution quantiles for each row.
-
 ```{r}
 x <- matrix(rnorm(200), 20,10)  # 20x10 matrix
 t(apply(x, 1, quantile, probs=c(0.25, 0.75)))
@@ -684,13 +596,102 @@ This is a helpful operation for data which comes with, or has a natural, factor 
 tapply(iris$Petal.Length, iris$Species, summary)
 ```
 
-### Vectorize
+### by
+
+`by` is a wrapper to `tapply` applied to data frames. Here we create linear models on the columns of iris, excluding the Species factor, which we set as the indices to subset on. Then we produce a `summary` for the linear model of one of the species.
+```{r}
+ourModels <- by(iris[, -5], iris$Species, lm)
+summary(ourModels$setosa)
+```
+
+### mapply
+
+### eapply
+
+### vapply
+
+Where `sapply` tries to guess the correct format, `vapply` allows you to explicitly set it. This is useful when writing functions where you want to be very certain of what is being returned.
+
+### rapply
+
+## Vectorize
 
 See `?Vectorize` to better understand this
 
-#### Scope 
+# Functions
 
-#### anonymous/closure/lambda 
+Functions are first-class in R: they can be passed, and defined in a scope. The return value is the last expression evaluated.
+
+Interestingly, even `[]` is a function. Rather, `[` is. To use it we must surround it in backticks.
+
+```{r}
+`[`(c(5,6,7,8), 2)
+```
+
+## Arguments
+
+```{r}
+formals(rnorm)
+```
+
+An interesting look at how `formals` and `alist` work
+```{r}
+f <- function() x
+formals(f) <- al <- alist(x =, y = NULL, ... =)
+print(f)
+print(al)
+```
+
+The following demonstrates some things about argument order.
+```{r, eval=FALSE}
+mydata <- rnorm(100)
+sd(mydata)      # mydata is passed as the first argument, the rest are default
+sd(x = mydata)  # equivalent to above
+sd(x = mydata, na.rm = FALSE)
+sd(na.rm = FALSE, x = mydata) # fine, but not recommended to change around order
+sd(na.rm = FALSE, mydata)     # since mydata is unnamed, it will be assigned to the first expected argument, x
+```
+
+When an argument is matched by name, it is "taken out" of the list, and following arguments will be matched in order.
+
+## Lazy Evaluation
+
+Here, `c` has a default value, but `b` doesn't, but `b` isn't used so we don't really care.
+```{r}
+f1 <- function(a, b, c = TRUE) {
+  a^2
+}
+
+f2 <- function(a,b) {
+  print(a)
+  print(b)
+}
+```
+
+Calling `f2(45)` will print 45, THEN error, because 45 will match for `a`, and `b` will be unmatched when it is called.
+
+## ...
+
+`...` argument indicates a variable number of arguments that are usually passed on to other functions. Here we extend `plot` and accept any arguments that it would take.
+```{r}
+myplot <- function(x, y, type="l", ... ) {
+  plot(x, y, type = type, col="green", main="Green lines", ... )
+}
+myplot(1:10, 1:10+rnorm(10))
+```
+
+`paste` doesn't know how many objects it will be pasting, so ... is the first argument
+```{r}
+args(paste)
+```
+
+**NOTE**: Arguments that appear after the ... must be explicitly named (and cannot be partially matched).
+
+dotdotdot example .R
+
+## Scope 
+
+## anonymous/closure/lambda 
 ```{r}
 x <- list(a = matrix(1:4, 2,2), b= matrix(1:6, 3,2))
 lapply(x, function(y) y[,1])
