@@ -1,4 +1,3 @@
-
 library(deldir)
 library(animation)
 library(plotrix)
